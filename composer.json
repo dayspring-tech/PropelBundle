@@ -43,7 +43,7 @@
   "scripts": {
     "ci-test": [
       "Composer\\Config::disableProcessTimeout",
-      "vendor/phpunit/phpunit/phpunit -c ./phpunit-jenkins.xml.dist"
+      "vendor/phpunit/phpunit/phpunit -c ./phpunit.xml.dist"
     ]
   }
 }
