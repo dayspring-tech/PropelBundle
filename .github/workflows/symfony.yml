@@ -18,3 +18,26 @@ jobs:
           extensions: sqlite3, zip
           coverage: xdebug
           tools: composer:v1
+
+      - name: Get Composer Cache Directory
+          id: composer-cache
+          run: |
+            echo "::set-output name=dir::$(composer config cache-dir)"
+          working-directory: ./
+
+      - name: cache dependencies
+        id: angular-dependencies
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+        working-directory: ./
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+        working-directory: ./
