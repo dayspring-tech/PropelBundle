@@ -41,3 +41,9 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
         working-directory: ./
+
+      - name: Run Tests
+        run: composer run-script ci-test
+        working-directory: ./
+        env:
+          SYMFONY_DEPRECATIONS_HELPER: weak

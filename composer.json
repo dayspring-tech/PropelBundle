@@ -38,5 +38,12 @@
 
   "suggest": {
     "propel/propel-acl-bundle": "For using the Propel ACL implementation"
+  },
+
+  "scripts": {
+    "ci-test": [
+      "Composer\\Config::disableProcessTimeout",
+      "vendor/phpunit/phpunit/phpunit -c ./phpunit-jenkins.xml.dist"
+    ]
   }
 }
