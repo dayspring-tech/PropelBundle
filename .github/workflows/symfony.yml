@@ -7,14 +7,20 @@ jobs:
   test:
 
     runs-on: ubuntu-18.04
-
+    strategy:
+      matrix:
+        php: ['7.2', '7.3', '7.4']
+        include:
+        - php: '8.0'
+          experimental: true        
+        
     steps:
       - uses: actions/checkout@v2
 
-      - name: Use PHP 7.4
+      - name: Use PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: ${{ matrix.php }}
           extensions: sqlite3, zip
           coverage: xdebug
           tools: composer:v1
