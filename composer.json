@@ -23,9 +23,9 @@
     "phpunit/phpunit": "^9.0",
     "phing/phing": "^2.12",
     "symfony/symfony": "^4.0",
-    "sensio/framework-extra-bundle": "^3.4|^4.0",
+    "sensio/framework-extra-bundle": "^4.0",
     "fakerphp/faker": "^1.10",
-    "symfony/phpunit-bridge": "^3.4|^4.0"
+    "symfony/phpunit-bridge": "^4.0"
   },
 
   "conflict": {
