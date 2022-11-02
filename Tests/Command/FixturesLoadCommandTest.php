@@ -20,7 +20,7 @@ class FixturesLoadCommandTest extends TestCase
 {
     protected $command;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->command = new TestableFixturesLoadCommand('testable-command');
 
@@ -40,7 +40,7 @@ class FixturesLoadCommandTest extends TestCase
         }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->filesystem->remove($this->fixturesDir);
     }

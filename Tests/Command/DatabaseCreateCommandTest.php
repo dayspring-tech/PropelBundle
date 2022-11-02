@@ -20,12 +20,12 @@ class DatabaseCreateCommandTest extends TestCase
     /** @var TestableDatabaseCreateCommand */
     protected $command;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->command = new TestableDatabaseCreateCommand();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->command = null;
     }

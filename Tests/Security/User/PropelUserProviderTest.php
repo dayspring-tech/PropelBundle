@@ -18,7 +18,7 @@ use Propel\Bundle\PropelBundle\Tests\TestCase;
  */
 class PropelUserProviderTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->loadPropelQuickBuilder();
 

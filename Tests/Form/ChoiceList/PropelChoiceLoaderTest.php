@@ -32,7 +32,7 @@ class PropelChoiceLoaderTest extends PHPUnit_Framework_TestCase
 
     private $obj3;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->factory = $this->getMockBuilder('Symfony\Component\Form\ChoiceList\Factory\ChoiceListFactoryInterface')->getMock();
         $this->class = Book::class;

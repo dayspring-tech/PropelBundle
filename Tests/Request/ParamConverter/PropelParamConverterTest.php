@@ -13,7 +13,7 @@ class PropelParamConverterTest extends TestCase
 {
     protected $con;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         if (!interface_exists('Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface')) {
@@ -23,7 +23,7 @@ class PropelParamConverterTest extends TestCase
         \Propel::disableInstancePooling();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         \Propel::enableInstancePooling();
         if ($this->con) {

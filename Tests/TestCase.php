@@ -20,7 +20,7 @@ use PHPUnit\Framework\TestCase as PHPUnit_Framework_TestCase;
  */
 class TestCase extends PHPUnit_Framework_TestCase
 {
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         if (!file_exists($file = __DIR__ . '/../vendor/propel/propel1/runtime/lib/Propel.php')) {
             self::markTestSkipped('Propel is not available.');

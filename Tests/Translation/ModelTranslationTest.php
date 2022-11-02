@@ -21,7 +21,7 @@ class ModelTranslationTest extends TestCase
      */
     protected $con;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

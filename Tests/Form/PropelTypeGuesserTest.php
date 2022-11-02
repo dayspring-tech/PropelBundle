@@ -28,12 +28,12 @@ class PropelTypeGuesserTest extends TestCase
 
     private $guesser;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->guesser = new PropelTypeGuesser();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->guesser = null;
     }
