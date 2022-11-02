@@ -39,11 +39,9 @@ class CollectionToArrayTransformerTest extends TestCase
         $this->assertCount(0, $result);
     }
 
-    /**
-     * @expectedException \Symfony\Component\Form\Exception\TransformationFailedException
-     */
     public function testTransformThrowsExceptionIfNotPropelObjectCollection()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\TransformationFailedException::class);
         $this->transformer->transform(new DummyObject());
     }
 
@@ -76,11 +74,9 @@ class CollectionToArrayTransformerTest extends TestCase
         $this->assertCount(0, $result->getData());
     }
 
-    /**
-     * @expectedException \Symfony\Component\Form\Exception\TransformationFailedException
-     */
     public function testReverseTransformThrowsExceptionIfNotArray()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\TransformationFailedException::class);
         $this->transformer->reverseTransform(new DummyObject());
     }
 

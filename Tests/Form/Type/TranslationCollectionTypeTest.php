@@ -91,11 +91,9 @@ class TranslationCollectionTypeTest extends TypeTestCase
         $this->assertCount(2, $item->getTranslatableItemI18ns());
     }
 
-    /**
-     * @expectedException \Symfony\Component\Form\Exception\UnexpectedTypeException
-     */
     public function testNoArrayGiven()
     {
+        $this->expectException(\Symfony\Component\Form\Exception\UnexpectedTypeException::class);
         $item = new Item(null, 'val');
 
         $builder = $this->factory->createBuilder(FormType::class, null, array(
@@ -113,11 +111,9 @@ class TranslationCollectionTypeTest extends TypeTestCase
         $form->setData($item);
     }
 
-    /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\MissingOptionsException
-     */
     public function testNoDataClassAdded()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\MissingOptionsException::class);
         $this->factory->createNamed('itemI18ns', TranslationCollectionType::class, null, array(
             'languages' => array('en', 'fr'),
             'entry_options' => array(
@@ -126,11 +122,9 @@ class TranslationCollectionTypeTest extends TypeTestCase
         ));
     }
 
-    /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\MissingOptionsException
-     */
     public function testNoLanguagesAdded()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\MissingOptionsException::class);
         $this->factory->createNamed('itemI18ns', TranslationCollectionType::class, null, array(
            'entry_options' => array(
                'data_class' => self::TRANSLATABLE_I18N_CLASS,
@@ -139,11 +133,9 @@ class TranslationCollectionTypeTest extends TypeTestCase
         ));
     }
 
-    /**
-     * @expectedException \Symfony\Component\OptionsResolver\Exception\MissingOptionsException
-     */
     public function testNoColumnsAdded()
     {
+        $this->expectException(\Symfony\Component\OptionsResolver\Exception\MissingOptionsException::class);
         $this->factory->createNamed('itemI18ns', TranslationCollectionType::class, null, array(
             'languages' => array('en', 'fr'),
             'entry_options' => array(
