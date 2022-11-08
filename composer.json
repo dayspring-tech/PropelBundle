@@ -17,15 +17,15 @@
 
   "require": {
     "propel/propel1": "dev-feature/php8.0",
-    "symfony/framework-bundle": "^4.2"
+    "symfony/framework-bundle": "^4.4"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.0",
     "phing/phing": "^2.12",
-    "symfony/symfony": "^4.2",
-    "sensio/framework-extra-bundle": "^4.2",
+    "symfony/symfony": "^4.4",
+    "sensio/framework-extra-bundle": "^4.0",
     "fakerphp/faker": "^1.10",
-    "symfony/phpunit-bridge": "^4.2"
+    "symfony/phpunit-bridge": "^4.4"
   },
 
   "conflict": {
