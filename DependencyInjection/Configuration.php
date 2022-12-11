@@ -42,8 +42,9 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('propel');
+        $treeBuilder = new TreeBuilder('propel');
+        // BC layer for symfony/config < 4.2
+        $rootNode = method_exists($treeBuilder, 'getRootNode') ? $treeBuilder->getRootNode() : $treeBuilder->root('propel');
 
         $this->addGeneralSection($rootNode);
         $this->addDbalSection($rootNode);
@@ -174,8 +175,9 @@ class Configuration implements ConfigurationInterface
      */
     private function getDbalConnectionsNode()
     {
-        $treeBuilder = new TreeBuilder();
-        $node = $treeBuilder->root('connections');
+        $treeBuilder = new TreeBuilder('connections');
+        // BC layer for symfony/config < 4.2
+        $node = method_exists($treeBuilder, 'getRootNode') ? $treeBuilder->getRootNode() : $treeBuilder->root('connections');
 
         $node
             ->requiresAtLeastOneElement()

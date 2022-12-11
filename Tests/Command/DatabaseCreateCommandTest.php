@@ -22,7 +22,9 @@ class DatabaseCreateCommandTest extends TestCase
 
     public function setUp(): void
     {
-        $this->command = new TestableDatabaseCreateCommand();
+        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
+
+        $this->command = new TestableDatabaseCreateCommand($container);
     }
 
     public function tearDown(): void

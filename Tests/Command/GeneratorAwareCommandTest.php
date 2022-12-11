@@ -30,8 +30,7 @@ class GeneratorAwareCommandTest extends TestCase
 
     public function testGetDatabasesFromSchema()
     {
-        $command = new GeneratorAwareCommandTestable('testable-command');
-        $command->setContainer($this->container);
+        $command = new GeneratorAwareCommandTestable($this->container, 'testable-command');
         $databases = $command->getDatabasesFromSchema(new \SplFileInfo(__DIR__ . '/../Fixtures/schema.xml'));
 
         $this->assertTrue(is_array($databases));
@@ -51,18 +50,6 @@ class GeneratorAwareCommandTest extends TestCase
 
 class GeneratorAwareCommandTestable extends GeneratorAwareCommand
 {
-    protected $container;
-
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-
-    protected function getContainer()
-    {
-        return $this->container;
-    }
-
     public function getDatabasesFromSchema(\SplFileInfo $file, \XmlToAppData $transformer = null)
     {
         $this->loadPropelGenerator();

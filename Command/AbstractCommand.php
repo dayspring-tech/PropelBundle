@@ -9,10 +9,11 @@
  */
 namespace Propel\Bundle\PropelBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -25,7 +26,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
  * @author Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author William DURAND <william.durand1@gmail.com>
  */
-abstract class AbstractCommand extends ContainerAwareCommand
+abstract class AbstractCommand extends Command
 {
     /**
      * Additional Phing args to add in specialized commands.
@@ -65,6 +66,20 @@ abstract class AbstractCommand extends ContainerAwareCommand
      * @var InputInterface
      */
     protected $input;
+
+    private ContainerInterface $container;
+
+    public function __construct(ContainerInterface $container, $name = null)
+    {
+        $this->container = $container;
+
+        parent::__construct($name);
+    }
+
+    public function getContainer(): ContainerInterface
+    {
+        return $this->container;
+    }
 
     /**
      * Return the package for a given bundle.
