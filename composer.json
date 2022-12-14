@@ -33,7 +33,7 @@
   },
 
   "replace": {
-    "symfony/propel1-bridge": "<=2.8.0"
+    "symfony/propel1-bridge": "<2.8.0"
   },
 
   "suggest": {
