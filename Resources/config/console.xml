@@ -5,13 +5,13 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <defaults autowire="true" autoconfigure="true" public="false">
+            <bind key="$container" type="service" id="service_container" />
+        </defaults>
+
         <service id="propel.file_locator" alias="file_locator" public="true">
         </service>
 
-        <service class="Propel\Bundle\PropelBundle\Command\AbstractCommand"
-                 id="propel_bundle_propel.command.abstract_command"
-                 abstract="true">
-        </service>
         <service class="Propel\Bundle\PropelBundle\Command\BuildCommand"
                  id="propel_bundle_propel.command.build_command">
             <tag name="console.command" command="propel:build" />
