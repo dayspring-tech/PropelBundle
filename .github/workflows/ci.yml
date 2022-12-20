@@ -19,7 +19,7 @@ jobs:
           - '--prefer-lowest'
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Use PHP
         uses: shivammathur/setup-php@v2
@@ -37,7 +37,7 @@ jobs:
 
       - name: cache dependencies
         id: angular-dependencies
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-${{ matrix.php }}-${{ matrix.composer }}-composer-${{ hashFiles('**/composer.lock') }}
