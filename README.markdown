@@ -2,8 +2,8 @@ PropelBundle
 ============
 
 ![Build Status](https://github.com/dayspring-tech/PropelBundle/actions/workflows/ci.yml/badge.svg)
-[![Total Downloads](https://poser.pugx.org/dayspring-tech/PropelBundle/downloads.png)](https://packagist.org/packages/dayspring-tech/PropelBundle)
-[![Latest Stable Version](https://poser.pugx.org/dayspring-tech/PropelBundle/v/stable.png)](https://packagist.org/packages/dayspring-tech/PropelBundle)
+[![Total Downloads](https://poser.pugx.org/dayspring-tech/propel-bundle/downloads.png)](https://packagist.org/packages/dayspring-tech/propel-bundle)
+[![Latest Stable Version](https://poser.pugx.org/dayspring-tech/propel-bundle/v/stable.png)](https://packagist.org/packages/dayspring-tech/propel-bundle)
 
 This is the official implementation of [Propel](http://www.propelorm.org/) in Symfony2.
 
