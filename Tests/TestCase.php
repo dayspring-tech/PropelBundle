@@ -22,7 +22,7 @@ class TestCase extends PHPUnit_Framework_TestCase
 {
     public static function setUpBeforeClass(): void
     {
-        if (!file_exists($file = __DIR__ . '/../vendor/propel/propel1/runtime/lib/Propel.php')) {
+        if (!file_exists($file = __DIR__ . '/../vendor/dayspring-tech/propel1/runtime/lib/Propel.php')) {
             self::markTestSkipped('Propel is not available.');
         }
 
@@ -39,10 +39,10 @@ class TestCase extends PHPUnit_Framework_TestCase
 
     protected function loadPropelQuickBuilder()
     {
-        require_once __DIR__ . '/../vendor/propel/propel1/runtime/lib/Propel.php';
-        require_once __DIR__ . '/../vendor/propel/propel1/runtime/lib/adapter/DBAdapter.php';
-        require_once __DIR__ . '/../vendor/propel/propel1/runtime/lib/adapter/DBSQLite.php';
-        require_once __DIR__ . '/../vendor/propel/propel1/runtime/lib/connection/PropelPDO.php';
-        require_once __DIR__ . '/../vendor/propel/propel1/generator/lib/util/PropelQuickBuilder.php';
+        require_once __DIR__ . '/../vendor/dayspring-tech/propel1/runtime/lib/Propel.php';
+        require_once __DIR__ . '/../vendor/dayspring-tech/propel1/runtime/lib/adapter/DBAdapter.php';
+        require_once __DIR__ . '/../vendor/dayspring-tech/propel1/runtime/lib/adapter/DBSQLite.php';
+        require_once __DIR__ . '/../vendor/dayspring-tech/propel1/runtime/lib/connection/PropelPDO.php';
+        require_once __DIR__ . '/../vendor/dayspring-tech/propel1/generator/lib/util/PropelQuickBuilder.php';
     }
 }
