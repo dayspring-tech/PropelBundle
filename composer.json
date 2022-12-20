@@ -16,7 +16,7 @@
   },
 
   "require": {
-    "propel/propel1": "dev-feature/php8.0",
+    "dayspring-tech/propel1": "dev-feature/php8.0",
     "symfony/framework-bundle": "^4.4|^5.0"
   },
   "require-dev": {
