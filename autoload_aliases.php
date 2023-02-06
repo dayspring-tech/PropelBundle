@@ -6,4 +6,4 @@ function autoload_propel_aliases($className) {
     }
 }
 
-spl_autoload_register('autoload_propel_aliases', false, true);
+spl_autoload_register('autoload_propel_aliases', true, true);
