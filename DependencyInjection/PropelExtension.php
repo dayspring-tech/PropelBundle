@@ -35,10 +35,10 @@ class PropelExtension extends Extension
         $config = $processor->processConfiguration($configuration, $configs);
 
         // Composer
-        if (file_exists($propelPath = $container->getParameter('kernel.root_dir') . '/../vendor/dayspring-tech/propel1')) {
+        if (file_exists($propelPath = $container->getParameter('kernel.project_dir') . '/vendor/dayspring-tech/propel1')) {
             $container->setParameter('propel.path', $propelPath);
         }
-        if (file_exists($phingPath = $container->getParameter('kernel.root_dir') . '/../vendor/phing/phing/classes')) {
+        if (file_exists($phingPath = $container->getParameter('kernel.project_dir') . '/vendor/phing/phing/classes')) {
             $container->setParameter('propel.phing_path', $phingPath);
         }
 
