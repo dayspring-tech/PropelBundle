@@ -55,13 +55,14 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if ($input->getOption('down')) {
-            $this->callPhing('migration-down');
+            $ret=$this->callPhing('migration-down');
         } elseif ($input->getOption('up')) {
-            $this->callPhing('migration-up');
+            $ret=$this->callPhing('migration-up');
         } else {
-            $this->callPhing('migrate');
+            $ret=$this->callPhing('migrate');
         }
 
         $this->writeSummary($output, 'propel-migration');
+        return $ret ? 0 : 1;
     }
 }
