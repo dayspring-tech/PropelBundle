@@ -43,7 +43,7 @@ abstract class AbstractDataHandler
     /**
      * @return string
      */
-    protected function getRootDir()
+    protected function getProjectDir()
     {
         return $this->rootDir;
     }
@@ -134,10 +134,10 @@ abstract class AbstractDataHandler
         if (!empty($configuration['datasources'][$connectionName]['connection']['model_paths'])) {
             $modelPaths = $configuration['datasources'][$connectionName]['connection']['model_paths'];
             foreach ($modelPaths as $modelPath) {
-                $searchPath[] = $this->getRootDir() . '/../' . $modelPath;
+                $searchPath[] = $this->getProjectDir() . '/../' . $modelPath;
             }
         } else {
-            $searchPath[] = $this->getRootDir() . '/../';
+            $searchPath[] = $this->getProjectDir() . '/../';
         }
 
         return $searchPath;

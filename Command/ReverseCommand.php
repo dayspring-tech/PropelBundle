@@ -63,7 +63,7 @@ EOT
             $filesystem = new Filesystem();
             $generated  = $this->getCacheDir().'/schema.xml';
             $filename   = $name . '_reversed_schema.xml';
-            $destFile   = $this->getApplication()->getKernel()->getRootDir() . '/propel/generated-schemas/' . $filename;
+            $destFile   = $this->getApplication()->getKernel()->getProjectDir() . '/propel/generated-schemas/' . $filename;
 
             if (file_exists($generated)) {
                 $filesystem->copy($generated, $destFile);
