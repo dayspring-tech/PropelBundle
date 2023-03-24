@@ -52,7 +52,7 @@ class BuildCommand extends AbstractCommand
                     '--verbose'    => $input->getOption('verbose'),
             ));
             $modelCommand = $this->getApplication()->find('propel:model:build');
-            $res = $modelCommand->run($in, $output);
+            return $modelCommand->run($in, $output);
         }
 
         if (!$input->getOption('classes')) {

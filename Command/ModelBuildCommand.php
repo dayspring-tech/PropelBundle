@@ -56,8 +56,10 @@ EOT
                     $schemaDetails['basename']
                 ));
             }
+            return 0;
         } else {
             $this->writeTaskError($output, 'om');
+            return 1;
         }
     }
 }
