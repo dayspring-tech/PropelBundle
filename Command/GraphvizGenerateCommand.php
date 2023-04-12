@@ -50,5 +50,6 @@ EOT
         ));
 
         $this->writeNewDirectory($output, $dest);
+        return 0;
     }
 }

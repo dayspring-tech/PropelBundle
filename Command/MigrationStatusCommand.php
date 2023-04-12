@@ -46,5 +46,6 @@ EOT
         $this->callPhing('status');
 
         $this->writeSummary($output, 'propel-migration-status');
+        return 0;
     }
 }

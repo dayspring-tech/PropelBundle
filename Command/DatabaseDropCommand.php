@@ -76,15 +76,18 @@ EOT
                 $statement->execute();
 
                 $output->writeln(sprintf('<info>Database <comment>%s</comment> has been dropped.</info>', $dbName));
+                return 0;
             } catch (\Exception $e) {
                 $this->writeSection($output, array(
                     '[Propel] Exception caught',
                     '',
                     $e->getMessage()
                 ), 'fg=white;bg=red');
+                return 1;
             }
         } else {
             $output->writeln('<error>You have to use the "--force" option to drop the database.</error>');
+            return 1;
         }
     }
 }

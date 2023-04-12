@@ -53,8 +53,10 @@ EOT
                 '',
                 'Uncommitted migrations have been found. You should either execute or delete them before rerunning the propel:migration:generate-diff command.'
             ), 'fg=white;bg=red');
+            return 0;
         } else {
             $this->writeTaskError($output, 'propel-sql-diff');
+            return 1;
         }
     }
 }

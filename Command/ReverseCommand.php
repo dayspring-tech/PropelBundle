@@ -74,8 +74,10 @@ EOT
             } else {
                 $output->writeln(array('', 'No generated files.'));
             }
+            return 0;
         } else {
             $this->writeTaskError($output, 'reverse');
+            return 1;
         }
     }
 }

@@ -68,8 +68,10 @@ EOT
                     $this->doSqlInsert($manager, $output, $name);
                 }
             }
+            return 0;
         } else {
             $output->writeln('<error>You have to use --force to execute all SQL statements.</error>');
+            return 1;
         }
     }
 

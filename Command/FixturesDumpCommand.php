@@ -85,11 +85,11 @@ EOT
                 '',
                 $e->getMessage()), 'fg=white;bg=red');
 
-            return false;
+            return 1;
         }
 
         $this->writeNewFile($output, $filename);
 
-        return true;
+        return 0;
     }
 }

@@ -110,15 +110,18 @@ EOT
                 }
 
                 $connection->exec('SET FOREIGN_KEY_CHECKS = 1;');
+                return 0;
             } catch (\Exception $e) {
                 $this->writeSection($output, array(
                     '[Propel] Exception caught',
                     '',
                     $e->getMessage()
                 ), 'fg=white;bg=red');
+                return 1;
             }
         } else {
             $output->writeln('<error>You have to use the "--force" option to drop some tables.</error>');
+            return 1;
         }
     }
 }

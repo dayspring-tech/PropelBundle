@@ -62,7 +62,7 @@ class BuildCommand extends AbstractCommand
                     '--verbose'    => $input->getOption('verbose'),
             ));
             $sqlCommand = $this->getApplication()->find('propel:sql:build');
-            $sqlCommand->run($in, $output);
+            return $sqlCommand->run($in, $output);
         }
 
         if ($input->getOption('insert-sql')) {
@@ -73,7 +73,8 @@ class BuildCommand extends AbstractCommand
                     '--force'      => true,
             ));
             $insertCommand = $this->getApplication()->find('propel:sql:insert');
-            $insertCommand->run($in, $output);
+            return $insertCommand->run($in, $output);
         }
+        return 1;
     }
 }

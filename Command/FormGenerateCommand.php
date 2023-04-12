@@ -63,6 +63,7 @@ EOT
         } else {
             $output->writeln(sprintf('No <comment>*schemas.xml</comment> files found in bundle <comment>%s</comment>.', $this->bundle->getName()));
         }
+        return 0;
     }
 
     private function createFormTypeFromDatabase(BundleInterface $bundle, \Database $database, $models, OutputInterface $output, $force = false)
