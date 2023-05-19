@@ -134,21 +134,18 @@ EOT
         if ($input->getOption('sql') || $noOptions) {
             if (-1 === $this->loadSqlFixtures($input, $output)) {
                 $output->writeln('No <info>SQL</info> fixtures found.');
-                return 1;
             }
         }
 
         if ($input->getOption('xml') || $noOptions) {
             if (-1 === $this->loadFixtures($input, $output, 'xml')) {
                 $output->writeln('No <info>XML</info> fixtures found.');
-                return 1;
             }
         }
 
         if ($input->getOption('yml') || $noOptions) {
             if (-1 === $this->loadFixtures($input, $output, 'yml')) {
                 $output->writeln('No <info>YML</info> fixtures found.');
-                return 1;
             }
         }
         return 0;
