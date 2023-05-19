@@ -43,7 +43,7 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $dest = $this->getApplication()->getKernel()->getProjectDir() . '/propel/graph/';
+        $dest = $this->getApplication()->getKernel()->getProjectDir() . '/app/propel/graph/';
 
         $this->callPhing('graphviz', array(
             'propel.graph.dir'    => $dest,
