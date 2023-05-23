@@ -120,7 +120,7 @@ EOT
         if (null !== $this->bundle) {
             $this->absoluteFixturesPath = $this->getFixturesPath($this->bundle);
         } else {
-            $this->absoluteFixturesPath = realpath($this->getApplication()->getKernel()->getProjectDir() . '/../' . $input->getOption('dir'));
+            $this->absoluteFixturesPath = realpath($this->getApplication()->getKernel()->getProjectDir() . '/' . $input->getOption('dir'));
         }
 
         if (!$this->absoluteFixturesPath && !file_exists($this->absoluteFixturesPath)) {
@@ -134,21 +134,18 @@ EOT
         if ($input->getOption('sql') || $noOptions) {
             if (-1 === $this->loadSqlFixtures($input, $output)) {
                 $output->writeln('No <info>SQL</info> fixtures found.');
-                return 1;
             }
         }
 
         if ($input->getOption('xml') || $noOptions) {
             if (-1 === $this->loadFixtures($input, $output, 'xml')) {
                 $output->writeln('No <info>XML</info> fixtures found.');
-                return 1;
             }
         }
 
         if ($input->getOption('yml') || $noOptions) {
             if (-1 === $this->loadFixtures($input, $output, 'yml')) {
                 $output->writeln('No <info>YML</info> fixtures found.');
-                return 1;
             }
         }
         return 0;
@@ -176,9 +173,9 @@ EOT
         list($name, $defaultConfig) = $this->getConnection($input, $output);
 
         if ('yml' === $type) {
-            $loader = new YamlDataLoader($this->getApplication()->getKernel()->getProjectDir(), $this->getContainer());
+            $loader = new YamlDataLoader($this->getApplication()->getKernel()->getProjectDir() . '/app', $this->getContainer());
         } elseif ('xml' === $type) {
-            $loader = new XmlDataLoader($this->getApplication()->getKernel()->getProjectDir());
+            $loader = new XmlDataLoader($this->getApplication()->getKernel()->getProjectDir() . '/app');
         } else {
             return;
         }

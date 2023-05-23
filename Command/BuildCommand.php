@@ -52,7 +52,6 @@ class BuildCommand extends AbstractCommand
                     '--verbose'    => $input->getOption('verbose'),
             ));
             $modelCommand = $this->getApplication()->find('propel:model:build');
-            return $modelCommand->run($in, $output);
         }
 
         if (!$input->getOption('classes')) {
@@ -62,7 +61,6 @@ class BuildCommand extends AbstractCommand
                     '--verbose'    => $input->getOption('verbose'),
             ));
             $sqlCommand = $this->getApplication()->find('propel:sql:build');
-            return $sqlCommand->run($in, $output);
         }
 
         if ($input->getOption('insert-sql')) {
@@ -73,8 +71,7 @@ class BuildCommand extends AbstractCommand
                     '--force'      => true,
             ));
             $insertCommand = $this->getApplication()->find('propel:sql:insert');
-            return $insertCommand->run($in, $output);
         }
-        return 1;
+        return 0;
     }
 }
