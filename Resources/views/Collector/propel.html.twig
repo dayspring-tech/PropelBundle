@@ -14,7 +14,7 @@
 
     {% set text %}{% endset %}
 
-    {% include 'WebProfilerBundle:Profiler:toolbar_item.html.twig' with { link: profiler_url } %}
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { link: profiler_url }) }}
 {% endif %}
 {% endblock %}
 
@@ -79,7 +79,7 @@
                     <code>{{ query.sql|format_sql }}</code>
                     {% if app.request.query.has('query') and app.request.query.get('query') == i %}
                         <div class="SQLExplain">
-                        {{ render(controller('PropelBundle:Panel:explain', {
+                        {{ render(controller('Propel\\Bundle\\PropelBundle\\Controller\\PanelController::explainAction', {
                             'token': token,
                             'panel': 'propel',
                             'query': app.request.query.get('query'),
@@ -101,5 +101,5 @@
         </tbody>
     </table>
 
-    {{ render(controller('PropelBundle:Panel:configuration')) }}
+    {{ render(controller('Propel\\Bundle\\PropelBundle\\Controller\\PanelController::configurationAction')) }}
 {% endblock %}
