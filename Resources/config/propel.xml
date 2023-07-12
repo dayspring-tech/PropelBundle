@@ -47,5 +47,11 @@
 
         <service id="propel.security.user.provider" class="%propel.security.user.provider.class%" abstract="true" public="false">
         </service>
+
+        <prototype namespace="Propel\Bundle\PropelBundle\Controller\" resource="../../Controller/*" autowire="true" autoconfigure="true" >
+            <tag name="controller.service_arguments" />
+            <bind key="$propelConfiguration" type="service" id="propel.configuration" />
+            <bind key="$profiler" type="service" id="profiler" />
+        </prototype>
     </services>
 </container>
