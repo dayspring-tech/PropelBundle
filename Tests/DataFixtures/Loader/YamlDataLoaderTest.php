@@ -315,10 +315,10 @@ YAML;
         $book = $books[0];
         $this->assertNotNull($book->getName());
         $this->assertNotEquals('null', strtolower($book->getName()));
-        $this->assertRegExp('#[a-z]+#', $book->getName());
+        $this->assertMatchesRegularExpression('#[a-z]+#', $book->getName());
         $this->assertNotNull($book->getDescription());
         $this->assertNotEquals('null', strtolower($book->getDescription()));
-        $this->assertRegExp('#[\w ]+#', $book->getDescription());
+        $this->assertMatchesRegularExpression('#[\w ]+#', $book->getDescription());
     }
 
     public function testLoadWithFakerDateTime()
@@ -346,7 +346,7 @@ YAML;
         $this->assertCount(1, $books);
 
         $book = $books[0];
-        $this->assertRegExp('/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/', $book->getName());
+        $this->assertMatchesRegularExpression('/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/', $book->getName());
 
         $datetime = new \DateTime($book->getName());
         $this->assertInstanceOf('DateTime', $datetime);
