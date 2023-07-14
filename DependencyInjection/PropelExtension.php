@@ -14,6 +14,8 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\HttpKernel\Profiler\Profiler;
+use Symfony\Bundle\WebProfilerBundle\DependencyInjection\WebProfilerExtension;
 
 /**
  * PropelExtension loads the PropelBundle configuration.
@@ -68,6 +70,10 @@ class PropelExtension extends Extension
             $loader->load('propel.xml');
             $loader->load('converters.xml');
             $loader->load('console.xml');
+
+            if (($env = $container->getParameter('kernel.environment')) === 'dev' && class_exists(WebProfilerExtension::class)) {
+                $container->setAlias(Profiler::class, 'profiler');
+            }
         }
 
         // build properties
