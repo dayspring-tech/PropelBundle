@@ -10,6 +10,7 @@
 namespace Propel\Bundle\PropelBundle\Tests\Command;
 
 use Propel\Bundle\PropelBundle\Command\AbstractCommand;
+use Propel\Bundle\PropelBundle\Service\SchemaLocator;
 use Propel\Bundle\PropelBundle\Tests\TestCase;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\Config\FileLocator;
@@ -26,16 +27,23 @@ class AbstractCommandTest extends TestCase
     protected $command;
 
     protected $mockLocator;
+    protected $mockSchemaLocator;
 
     public function setUp(): void
     {
         $this->mockLocator = $this->createPartialMock(FileLocator::class, ['locate']);
+        $this->mockSchemaLocator = $this->createPartialMock(SchemaLocator::class, ['locateFromBundle', 'locateFromBundlesAndConfiguration']);
 
         $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
+//        $container->expects($this->any())
+//            ->method('get')
+//            ->with('propel.file_locator')
+//            ->willReturn($this->mockLocator);
+
         $container->expects($this->any())
             ->method('get')
-            ->with('propel.file_locator')
-            ->willReturn($this->mockLocator);
+            ->with('propel.schema_locator')
+            ->willReturn($this->mockSchemaLocator);
 
         $this->command = new TestableAbstractCommand($container, 'testable-command');
     }
@@ -91,93 +99,17 @@ class AbstractCommandTest extends TestCase
         $this->assertEquals($expected, $this->command->transformToLogicalName($schema, $bundle));
     }
 
-    public function testGetSchemasFromBundle()
-    {
-        $bundle = $this->getMockBuilder('Symfony\Component\HttpKernel\Bundle\BundleInterface')->getMock();
-        $bundle
-            ->expects($this->once())
-            ->method('getName')
-            ->will($this->returnValue('MySuperBundle'));
-        $bundle
-            ->expects($this->exactly(2))
-            ->method('getPath')
-            ->will($this->returnValue(__DIR__ . '/../Fixtures/src/My/SuperBundle'));
-
-        $aSchema = realpath(__DIR__ . '/../Fixtures/src/My/SuperBundle/Resources/config/a-schema.xml');
-
-        // hack to by pass the file locator
-        $this->mockLocator->expects($this->any())
-            ->method('locate')
-            ->willReturn($aSchema);
-        $this->command->setLocateResponse($aSchema);
-
-        $schemas = $this->command->getSchemasFromBundle($bundle);
-
-        $this->assertNotNull($schemas);
-        $this->assertTrue(is_array($schemas));
-        $this->assertCount(1, $schemas);
-        $this->assertArrayHasKey($aSchema, $schemas);
-        $this->assertSame($bundle, $schemas[$aSchema][0]);
-        $this->assertEquals(new \SplFileInfo($aSchema), $schemas[$aSchema][1]);
-    }
-
-    public function testGetSchemasFromBundleWithNoSchema()
-    {
-        $bundle = $this->getMockBuilder('Symfony\Component\HttpKernel\Bundle\BundleInterface')->getMock();
-        $bundle
-            ->expects($this->once())
-            ->method('getPath')
-            ->will($this->returnValue(__DIR__ . '/../Fixtures/src/My/SecondBundle'));
-
-        $schemas = $this->command->getSchemasFromBundle($bundle);
-
-        $this->assertNotNull($schemas);
-        $this->assertTrue(is_array($schemas));
-        $this->assertCount(0, $schemas);
-    }
-
-    public function testGetFinalSchemasWithNoSchemaInBundles()
-    {
-        $bundle = $this->getMockBuilder('Symfony\Component\HttpKernel\Bundle\BundleInterface')->getMock();
-        $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\KernelInterface')->getMock();
-
-        $bundle
-            ->expects($this->once())
-            ->method('getPath')
-            ->will($this->returnValue(__DIR__ . '/../Fixtures/src/My/SecondBundle'));
-
-        $kernel
-            ->expects($this->once())
-            ->method('getBundles')
-            ->will($this->returnValue(array($bundle)));
-
-        $schemas = $this->command->getFinalSchemas($kernel);
-
-        $this->assertNotNull($schemas);
-        $this->assertTrue(is_array($schemas));
-        $this->assertCount(0, $schemas);
-    }
-
     public function testGetFinalSchemas()
     {
         $bundle = $this->getMockBuilder('Symfony\Component\HttpKernel\Bundle\BundleInterface')->getMock();
         $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\KernelInterface')->getMock();
 
-        $bundle
-            ->expects($this->once())
-            ->method('getName')
-            ->will($this->returnValue('MySuperBundle'));
-        $bundle
-            ->expects($this->exactly(2))
-            ->method('getPath')
-            ->will($this->returnValue(__DIR__ . '/../Fixtures/src/My/SuperBundle'));
-
         $aSchema = realpath(__DIR__ . '/../Fixtures/src/My/SuperBundle/Resources/config/a-schema.xml');
 
         // hack to by pass the file locator
-        $this->mockLocator->expects($this->any())
-            ->method('locate')
-            ->willReturn($aSchema);
+        $this->mockSchemaLocator->expects($this->any())
+            ->method('locateFromBundlesAndConfiguration')
+            ->willReturn([$aSchema => [$bundle, new \SplFileInfo($aSchema)]]);
         $this->command->setLocateResponse($aSchema);
 
         $kernel
@@ -200,21 +132,13 @@ class AbstractCommandTest extends TestCase
         $bundle = $this->getMockBuilder('Symfony\Component\HttpKernel\Bundle\BundleInterface')->getMock();
         $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\KernelInterface')->getMock();
 
-        $bundle
-            ->expects($this->once())
-            ->method('getName')
-            ->will($this->returnValue('MySuperBundle'));
-        $bundle
-            ->expects($this->exactly(2))
-            ->method('getPath')
-            ->will($this->returnValue(__DIR__ . '/../Fixtures/src/My/SuperBundle'));
-
         $aSchema = realpath(__DIR__ . '/../Fixtures/src/My/SuperBundle/Resources/config/a-schema.xml');
 
         // hack to by pass the file locator
-        $this->mockLocator->expects($this->any())
-            ->method('locate')
-            ->willReturn($aSchema);
+        // hack to by pass the file locator
+        $this->mockSchemaLocator->expects($this->once())
+            ->method('locateFromBundle')
+            ->willReturn([$aSchema => [$bundle, new \SplFileInfo($aSchema)]]);
         $this->command->setLocateResponse($aSchema);
 
         $kernel
@@ -259,11 +183,6 @@ class TestableAbstractCommand extends AbstractCommand
     public function transformToLogicalName(\SplFileInfo $schema, BundleInterface $bundle)
     {
         return parent::transformToLogicalName($schema, $bundle);
-    }
-
-    public function getSchemasFromBundle(BundleInterface $bundle)
-    {
-        return parent::getSchemasFromBundle($bundle);
     }
 
     public function getFinalSchemas(KernelInterface $kernel, BundleInterface $bundle = null)

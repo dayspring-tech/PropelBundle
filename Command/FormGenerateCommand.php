@@ -51,9 +51,9 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($schemas = $this->getSchemasFromBundle($this->bundle)) {
-            $schemas = $this->getFinalSchemas($this->getContainer()->get('kernel'));
+        $schemas = $this->getFinalSchemas($this->getContainer()->get('kernel'), $this->bundle);
 
+        if (0 < count($schemas)) {
             $transformer = new \XmlToAppData(null, null, 'UTF-8');
             foreach ($schemas as $fileName => $array) {
                 foreach ($this->getDatabasesFromSchema($array[1], $transformer) as $database) {
