@@ -47,6 +47,7 @@ EOT
     {
         if (true === $this->callPhing('diff')) {
             $this->writeSummary($output, 'propel-sql-diff');
+            return 0;
         } elseif ( strpos( $this->buffer, 'Uncommitted migrations have been found' ) ) {
             $this->writeSection($output, array(
                 '[Propel] Error',
