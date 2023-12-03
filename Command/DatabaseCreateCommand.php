@@ -35,6 +35,8 @@ class DatabaseCreateCommand extends AbstractCommand
     /**
      * @see Command
      *
+     * @return int 0 if everything went fine, or an exit code
+     *
      * @throws \InvalidArgumentException When the target directory does not exist
      */
     protected function execute(InputInterface $input, OutputInterface $output)
