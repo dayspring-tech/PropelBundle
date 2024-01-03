@@ -158,12 +158,12 @@ EOT
      *
      * @param  \Symfony\Component\Console\Input\InputInterface   $input
      * @param  \Symfony\Component\Console\Output\OutputInterface $output
-     * @return void
+     * @return int
      */
     protected function loadFixtures(InputInterface $input, OutputInterface $output, $type = null)
     {
         if (null === $type) {
-            return;
+            return -2;
         }
 
         $datas = $this->getFixtureFiles($type);
@@ -179,7 +179,7 @@ EOT
         } elseif ('xml' === $type) {
             $loader = new XmlDataLoader($this->getApplication()->getKernel()->getProjectDir() . '/app');
         } else {
-            return;
+            return -3;
         }
 
         try {
@@ -190,12 +190,12 @@ EOT
                 '',
                 $e->getMessage()), 'fg=white;bg=red');
 
-            return false;
+            return -4;
         }
 
         $output->writeln(sprintf('<comment>%s</comment> %s fixtures file%s loaded.', $nb, strtoupper($type), $nb > 1 ? 's' : ''));
 
-        return true;
+        return 0;
     }
 
     /**
@@ -203,7 +203,7 @@ EOT
      *
      * @param  \Symfony\Component\Console\Input\InputInterface   $input
      * @param  \Symfony\Component\Console\Output\OutputInterface $output
-     * @return void
+     * @return int
      */
     protected function loadSqlFixtures(InputInterface $input, OutputInterface $output)
     {
