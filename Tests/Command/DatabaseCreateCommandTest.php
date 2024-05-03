@@ -22,7 +22,7 @@ class DatabaseCreateCommandTest extends TestCase
 
     public function setUp(): void
     {
-        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
+        $container = $this->getMockBuilder(\Symfony\Component\DependencyInjection\ContainerInterface::class)->getMock();
 
         $this->command = new TestableDatabaseCreateCommand($container);
     }
@@ -48,28 +48,7 @@ class DatabaseCreateCommandTest extends TestCase
 
     public function dataTemporaryConfiguration()
     {
-        return array(
-            array(
-                'dbname',
-                array('connection' => array('dsn' => 'mydsn:host=localhost;dbname=test_db;')),
-                'mydsn:host=localhost;'
-            ),
-            array(
-                'dbname_first',
-                array('connection' => array('dsn' => 'mydsn:dbname=test_db;host=localhost')),
-                'mydsn:host=localhost'
-            ),
-            array(
-                'dbname_no_semicolon',
-                array('connection' => array('dsn' => 'mydsn:host=localhost;dbname=test_db')),
-                'mydsn:host=localhost;'
-            ),
-            array(
-                'no_dbname',
-                array('connection' => array('dsn' => 'mydsn:host=localhost;')),
-                'mydsn:host=localhost;'
-            ),
-        );
+        return [['dbname', ['connection' => ['dsn' => 'mydsn:host=localhost;dbname=test_db;']], 'mydsn:host=localhost;'], ['dbname_first', ['connection' => ['dsn' => 'mydsn:dbname=test_db;host=localhost']], 'mydsn:host=localhost'], ['dbname_no_semicolon', ['connection' => ['dsn' => 'mydsn:host=localhost;dbname=test_db']], 'mydsn:host=localhost;'], ['no_dbname', ['connection' => ['dsn' => 'mydsn:host=localhost;']], 'mydsn:host=localhost;']];
     }
 }
 

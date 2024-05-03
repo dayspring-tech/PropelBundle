@@ -80,7 +80,7 @@ class PropelExtension extends Extension
         if (isset($config['build_properties']) && is_array($config['build_properties'])) {
             $buildProperties = $config['build_properties'];
         } else {
-            $buildProperties = array();
+            $buildProperties = [];
         }
 
         // behaviors
@@ -90,7 +90,7 @@ class PropelExtension extends Extension
             }
         }
 
-        $container->getDefinition('propel.build_properties')->setArguments(array($buildProperties));
+        $container->getDefinition('propel.build_properties')->setArguments([$buildProperties]);
 
         if (!empty($config['dbal'])) {
             $this->dbalLoad($config['dbal'], $container);
@@ -114,17 +114,17 @@ class PropelExtension extends Extension
         $container->setParameter('propel.dbal.default_connection', $connectionName);
 
         if (0 === count($config['connections'])) {
-            $config['connections'] = array($connectionName => $config);
+            $config['connections'] = [$connectionName => $config];
         }
 
-        $c = array();
+        $c = [];
         foreach ($config['connections'] as $name => $conf) {
             $c['datasources'][$name]['adapter'] = $conf['driver'];
             if (!empty($conf['slaves'])) {
                 $c['datasources'][$name]['slaves']['connection'] = $conf['slaves'];
             }
 
-            foreach (array('dsn', 'user', 'password', 'classname', 'options', 'attributes', 'settings', 'model_paths') as $att) {
+            foreach (['dsn', 'user', 'password', 'classname', 'options', 'attributes', 'settings', 'model_paths'] as $att) {
                 if (isset($conf[$att])) {
                     $c['datasources'][$name]['connection'][$att] = $conf[$att];
                 }
@@ -136,10 +136,10 @@ class PropelExtension extends Extension
             $c['datasources']['default'] = $connectionName;
         }
 
-        $container->getDefinition('propel.configuration')->setArguments(array($c));
+        $container->getDefinition('propel.configuration')->setArguments([$c]);
     }
 
-    public function getConfiguration(array $config, ContainerBuilder $container)
+    public function getConfiguration(array $config, ContainerBuilder $container): ?\Symfony\Component\Config\Definition\ConfigurationInterface
     {
         return new Configuration($container->getParameter('kernel.debug'));
     }
@@ -149,7 +149,7 @@ class PropelExtension extends Extension
      *
      * @return string The XSD base path
      */
-    public function getXsdValidationBasePath()
+    public function getXsdValidationBasePath(): string|false
     {
         return __DIR__.'/../Resources/config/schema';
     }
@@ -161,7 +161,7 @@ class PropelExtension extends Extension
      *
      * @return string The alias
      */
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'propel';
     }

@@ -45,17 +45,13 @@ EOT
      *
      * @throws \InvalidArgumentException When the target directory does not exist
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (true === $this->callPhing('diff')) {
             $this->writeSummary($output, 'propel-sql-diff');
             return 0;
-        } elseif ( strpos( $this->buffer, 'Uncommitted migrations have been found' ) ) {
-            $this->writeSection($output, array(
-                '[Propel] Error',
-                '',
-                'Uncommitted migrations have been found. You should either execute or delete them before rerunning the propel:migration:generate-diff command.'
-            ), 'fg=white;bg=red');
+        } elseif ( strpos( (string) $this->buffer, 'Uncommitted migrations have been found' ) ) {
+            $this->writeSection($output, ['[Propel] Error', '', 'Uncommitted migrations have been found. You should either execute or delete them before rerunning the propel:migration:generate-diff command.'], 'fg=white;bg=red');
             return 0;
         } else {
             $this->writeTaskError($output, 'propel-sql-diff');

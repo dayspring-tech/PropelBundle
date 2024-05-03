@@ -39,9 +39,9 @@ class DatabaseCreateCommand extends AbstractCommand
      *
      * @throws \InvalidArgumentException When the target directory does not exist
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        list($name, $config) = $this->getConnection($input, $output);
+        [$name, $config] = $this->getConnection($input, $output);
         $dbName = $this->parseDbName($config['connection']['dsn']);
 
         if (null === $dbName) {
@@ -60,11 +60,7 @@ class DatabaseCreateCommand extends AbstractCommand
             $output->writeln(sprintf('<info>Database <comment>%s</comment> has been created.</info>', $dbName));
             return 0;
         } catch (\Exception $e) {
-            $this->writeSection($output, array(
-                '[Propel] Exception caught',
-                '',
-                $e->getMessage()
-            ), 'fg=white;bg=red');
+            $this->writeSection($output, ['[Propel] Exception caught', '', $e->getMessage()], 'fg=white;bg=red');
             return 1;
         }
     }
@@ -86,11 +82,9 @@ class DatabaseCreateCommand extends AbstractCommand
         $config['connection']['dsn'] = preg_replace(
             '#dbname='.$dbName.'(;|$)#',
             '',
-            $config['connection']['dsn']
+            (string) $config['connection']['dsn']
         );
 
-        return array(
-            'datasources' => array($name => $config)
-        );
+        return ['datasources' => [$name => $config]];
     }
 }

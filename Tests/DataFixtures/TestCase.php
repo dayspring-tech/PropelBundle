@@ -26,7 +26,7 @@ class TestCase extends BaseTestCase
      *
      * @var array
      */
-    protected $tmpFiles = array();
+    protected $tmpFiles = [];
 
     protected function setUp(): void
     {
@@ -58,7 +58,7 @@ XML;
         $builder = new \PropelQuickBuilder();
         $builder->setSchema($schema);
         if (class_exists('Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader\Book')) {
-            $builder->setClassTargets(array());
+            $builder->setClassTargets([]);
         }
 
         $this->con = $builder->build();
@@ -74,7 +74,7 @@ XML;
             @unlink($eachFile);
         }
 
-        $this->tmpFiles = array();
+        $this->tmpFiles = [];
     }
 
     /**

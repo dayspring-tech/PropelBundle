@@ -49,17 +49,11 @@ EOT
      *
      * @throws \InvalidArgumentException When the target directory does not exist
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        list($name, $defaultConfig) = $this->getConnection($input, $output);
+        [$name, $defaultConfig] = $this->getConnection($input, $output);
 
-        $ret = $this->callPhing('reverse', array(
-            'propel.project'            => $name,
-            'propel.database'           => $defaultConfig['adapter'],
-            'propel.database.url'       => $defaultConfig['connection']['dsn'],
-            'propel.database.user'      => $defaultConfig['connection']['user'],
-            'propel.database.password'  => isset($defaultConfig['connection']['password']) ? $defaultConfig['connection']['password'] : '',
-        ));
+        $ret = $this->callPhing('reverse', ['propel.project'            => $name, 'propel.database'           => $defaultConfig['adapter'], 'propel.database.url'       => $defaultConfig['connection']['dsn'], 'propel.database.user'      => $defaultConfig['connection']['user'], 'propel.database.password'  => $defaultConfig['connection']['password'] ?? '']);
 
         if (true === $ret) {
             $filesystem = new Filesystem();
@@ -69,12 +63,9 @@ EOT
 
             if (file_exists($generated)) {
                 $filesystem->copy($generated, $destFile);
-                $output->writeln(array(
-                    '',
-                    sprintf('>>  <info>File+</info>    %s', $destFile),
-                ));
+                $output->writeln(['', sprintf('>>  <info>File+</info>    %s', $destFile)]);
             } else {
-                $output->writeln(array('', 'No generated files.'));
+                $output->writeln(['', 'No generated files.']);
             }
             return 0;
         } else {

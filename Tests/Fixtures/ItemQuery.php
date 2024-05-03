@@ -13,22 +13,11 @@ namespace Propel\Bundle\PropelBundle\Tests\Fixtures;
 
 class ItemQuery
 {
-    private $map = array(
-        'id' => \PropelColumnTypes::INTEGER,
-        'value' => \PropelColumnTypes::VARCHAR,
-        'price' => \PropelColumnTypes::FLOAT,
-        'is_active' => \PropelColumnTypes::BOOLEAN,
-        'slug' => \PropelColumnTypes::VARCHAR,
-        'enabled' => \PropelColumnTypes::BOOLEAN_EMU,
-        'updated_at' => \PropelColumnTypes::TIMESTAMP,
-    );
+    private $map = ['id' => \PropelColumnTypes::INTEGER, 'value' => \PropelColumnTypes::VARCHAR, 'price' => \PropelColumnTypes::FLOAT, 'is_active' => \PropelColumnTypes::BOOLEAN, 'slug' => \PropelColumnTypes::VARCHAR, 'enabled' => \PropelColumnTypes::BOOLEAN_EMU, 'updated_at' => \PropelColumnTypes::TIMESTAMP];
 
-    private $caseInsensitiveMap = array(
-        'isactive' => 'is_active',
-        'updatedat' => 'updated_at',
-    );
+    private $caseInsensitiveMap = ['isactive' => 'is_active', 'updatedat' => 'updated_at'];
 
-    public static $result = array();
+    public static $result = [];
 
     public function find()
     {
@@ -53,7 +42,7 @@ class ItemQuery
         $cm->setType('INTEGER');
         $cm->setPhpName('Id');
 
-        return array('id' => $cm);
+        return ['id' => $cm];
     }
 
     /**
@@ -79,7 +68,7 @@ class ItemQuery
      */
     public function hasColumnByInsensitiveCase($column)
     {
-        $column = strtolower($column);
+        $column = strtolower((string) $column);
 
         return in_array($column, array_keys($this->caseInsensitiveMap));
     }
@@ -89,7 +78,7 @@ class ItemQuery
      */
     public function getColumnByInsensitiveCase($column)
     {
-        $column = strtolower($column);
+        $column = strtolower((string) $column);
 
         if (isset($this->caseInsensitiveMap[$column])) {
             return $this->getColumn($this->caseInsensitiveMap[$column]);
@@ -121,10 +110,6 @@ class ItemQuery
         $resellerRelation->setType(\RelationMap::MANY_TO_MANY);
         $resellerRelation->setLocalTable($resellerTable);
 
-        return array(
-            $mainAuthorRelation,
-            $authorRelation,
-            $resellerRelation,
-        );
+        return [$mainAuthorRelation, $authorRelation, $resellerRelation];
     }
 }

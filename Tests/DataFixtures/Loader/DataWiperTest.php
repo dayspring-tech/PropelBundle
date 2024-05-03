@@ -31,9 +31,9 @@ class DataWiperTest extends TestCase
         $savedBook = \Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader\BookPeer::doSelectOne(new \Criteria(), $this->con);
         $this->assertInstanceOf('Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader\Book', $savedBook, 'The fixture has been saved correctly.');
 
-        $builder = $this->getMockBuilder('Propel\Bundle\PropelBundle\DataFixtures\Loader\DataWiper');
+        $builder = $this->getMockBuilder(\Propel\Bundle\PropelBundle\DataFixtures\Loader\DataWiper::class);
         $wipeout = $builder
-            ->setMethods(array('loadMapBuilders'))
+            ->setMethods(['loadMapBuilders'])
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -50,7 +50,7 @@ class DataWiperTest extends TestCase
             ->method('loadMapBuilders')
         ;
 
-        $wipeout->load(array(), 'default');
+        $wipeout->load([], 'default');
 
         $this->assertCount(0, \Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader\BookPeer::doSelect(new \Criteria(), $this->con));
     }

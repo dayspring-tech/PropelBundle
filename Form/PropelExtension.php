@@ -21,16 +21,12 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
  */
 class PropelExtension extends AbstractExtension
 {
-    protected function loadTypes()
+    protected function loadTypes(): array
     {
-        return array(
-            new Type\ModelType(PropertyAccess::createPropertyAccessor()),
-            new Type\TranslationCollectionType(),
-            new Type\TranslationType(),
-        );
+        return [new Type\ModelType(PropertyAccess::createPropertyAccessor()), new Type\TranslationCollectionType(), new Type\TranslationType()];
     }
 
-    protected function loadTypeGuesser()
+    protected function loadTypeGuesser(): ?\Symfony\Component\Form\FormTypeGuesserInterface
     {
         return new PropelTypeGuesser();
     }

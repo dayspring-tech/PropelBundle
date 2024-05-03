@@ -27,12 +27,12 @@ abstract class AbstractDataLoader extends AbstractDataHandler implements DataLoa
     /**
      * @var array
      */
-    protected $deletedClasses = array();
+    protected $deletedClasses = [];
 
     /**
      * @var array
      */
-    protected $object_references = array();
+    protected $object_references = [];
 
     /**
      * Transforms a file containing data in an array.
@@ -45,10 +45,10 @@ abstract class AbstractDataLoader extends AbstractDataHandler implements DataLoa
     /**
      * {@inheritdoc}
      */
-    public function load($files = array(), $connectionName)
+    public function load($files = [], $connectionName)
     {
         $nbFiles = 0;
-        $this->deletedClasses = array();
+        $this->deletedClasses = [];
 
         $this->loadMapBuilders($connectionName);
         $this->con = Propel::getConnection($connectionName);
@@ -56,7 +56,7 @@ abstract class AbstractDataLoader extends AbstractDataHandler implements DataLoa
         try {
             $this->con->beginTransaction();
 
-            $datas = array();
+            $datas = [];
             foreach ($files as $file) {
                 $content = $this->transformDataToArray($file);
 
@@ -112,7 +112,7 @@ abstract class AbstractDataLoader extends AbstractDataHandler implements DataLoa
 
         // bypass the soft_delete behavior if enabled
         $deleteMethod = method_exists($peerClass, 'doForceDeleteAll') ? 'doForceDeleteAll' : 'doDeleteAll';
-        call_user_func(array($peerClass, $deleteMethod), $this->con);
+        call_user_func([$peerClass, $deleteMethod], $this->con);
 
         $this->deletedClasses[] = $class;
 
@@ -142,7 +142,7 @@ abstract class AbstractDataLoader extends AbstractDataHandler implements DataLoa
                 $class = substr($class, 1);
             }
             $tableMap     = $this->dbMap->getTable(constant(constant($class.'::PEER').'::TABLE_NAME'));
-            $column_names = call_user_func_array(array(constant($class.'::PEER'), 'getFieldNames'), array(BasePeer::TYPE_FIELDNAME));
+            $column_names = call_user_func_array([constant($class.'::PEER'), 'getFieldNames'], [BasePeer::TYPE_FIELDNAME]);
 
             // iterate through datas for this class
             // might have been empty just for force a table to be emptied on import
@@ -169,7 +169,7 @@ abstract class AbstractDataLoader extends AbstractDataHandler implements DataLoa
                 }
 
                 foreach ($data as $name => $value) {
-                    if (is_array($value) && 's' === substr($name, -1)) {
+                    if (is_array($value) && str_ends_with($name, 's')) {
                         try {
                             // many to many relationship
                             $this->loadManyToMany($obj, substr($name, 0, -1), $value);
@@ -224,7 +224,7 @@ abstract class AbstractDataLoader extends AbstractDataHandler implements DataLoa
 
                     if (false !== $pos = array_search($name, $column_names)) {
                         $obj->setByPosition($pos, $value);
-                    } elseif (is_callable(array($obj, $method = 'set'.ucfirst(PropelInflector::camelize($name))))) {
+                    } elseif (is_callable([$obj, $method = 'set'.ucfirst(PropelInflector::camelize($name))])) {
                         $obj->$method($value);
                     } else {
                         throw new \InvalidArgumentException(sprintf('Column "%s" does not exist for class "%s".', $name, $class));
@@ -272,7 +272,7 @@ abstract class AbstractDataLoader extends AbstractDataHandler implements DataLoa
      */
     protected function getInheritedClasses($class) {
         $reflectionClass = new \ReflectionClass($class);
-        $classes = array();
+        $classes = [];
 
         while (!$reflectionClass->isAbstract()) {
             $classes[] = constant(constant($class.'::PEER').'::TABLE_NAME');
@@ -294,7 +294,7 @@ abstract class AbstractDataLoader extends AbstractDataHandler implements DataLoa
     {
         $middleTable = $this->dbMap->getTable($middleTableName);
         $middleClass = $middleTable->getClassname();
-        $inheritedClasses = $this->getInheritedClasses(get_class($obj));
+        $inheritedClasses = $this->getInheritedClasses($obj::class);
 
         foreach ($middleTable->getColumns() as $column) {
             if ($column->isForeignKey()) {
@@ -308,7 +308,7 @@ abstract class AbstractDataLoader extends AbstractDataHandler implements DataLoa
         }
 
         if (!isset($relatedClass)) {
-            throw new \InvalidArgumentException(sprintf('Unable to find the many-to-many relationship for object "%s".', get_class($obj)));
+            throw new \InvalidArgumentException(sprintf('Unable to find the many-to-many relationship for object "%s".', $obj::class));
         }
 
         foreach ($values as $value) {

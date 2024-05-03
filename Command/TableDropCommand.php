@@ -53,7 +53,7 @@ EOT
      *
      * @throws \InvalidArgumentException When the target directory does not exist
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $tablesToDelete = $input->getArgument('table');
 
@@ -78,7 +78,7 @@ EOT
             }
 
             try {
-                list($name, $config) = $this->getConnection($input, $output);
+                [$name, $config] = $this->getConnection($input, $output);
                 $connection = \Propel::getConnection($name);
                 $adapter = \Propel::getDB($name);
 
@@ -114,11 +114,7 @@ EOT
                 $connection->exec('SET FOREIGN_KEY_CHECKS = 1;');
                 return 0;
             } catch (\Exception $e) {
-                $this->writeSection($output, array(
-                    '[Propel] Exception caught',
-                    '',
-                    $e->getMessage()
-                ), 'fg=white;bg=red');
+                $this->writeSection($output, ['[Propel] Exception caught', '', $e->getMessage()], 'fg=white;bg=red');
                 return 1;
             }
         } else {

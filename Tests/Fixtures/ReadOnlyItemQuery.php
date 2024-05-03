@@ -25,6 +25,6 @@ class ReadOnlyItemQuery
         $cm = new \ColumnMap('id', new \TableMap());
         $cm->setType('INTEGER');
 
-        return array('id' => $cm);
+        return ['id' => $cm];
     }
 }

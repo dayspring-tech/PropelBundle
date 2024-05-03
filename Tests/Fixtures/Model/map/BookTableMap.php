@@ -22,7 +22,7 @@ class BookTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'vendor/bundles/Propel/PropelBundle/Tests/Fixtures/Model.map.BookTableMap';
+    public const CLASS_NAME = 'vendor/bundles/Propel/PropelBundle/Tests/Fixtures/Model.map.BookTableMap';
 
     /**
      * Initialize the table attributes, columns and validators
@@ -36,7 +36,7 @@ class BookTableMap extends TableMap
         // attributes
         $this->setName('book');
         $this->setPhpName('Book');
-        $this->setClassname('Propel\\Bundle\\PropelBundle\\Tests\\Fixtures\\Model\\Book');
+        $this->setClassname(\Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class);
         $this->setPackage('vendor/bundles/Propel/PropelBundle/Tests/Fixtures/Model');
         $this->setUseIdGenerator(true);
         // columns

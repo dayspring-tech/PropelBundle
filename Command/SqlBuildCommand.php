@@ -48,7 +48,7 @@ EOT
      *
      * @throws \InvalidArgumentException When the target directory does not exist
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $finder = new Finder();
         $filesystem = new Filesystem();
@@ -59,9 +59,7 @@ EOT
         $filesystem->mkdir($sqlDir);
 
         // Execute the task
-        $ret = $this->callPhing('build-sql', array(
-            'propel.sql.dir' => $sqlDir,
-        ));
+        $ret = $this->callPhing('build-sql', ['propel.sql.dir' => $sqlDir]);
 
         // Show the list of generated files
         if (true === $ret) {
@@ -88,11 +86,7 @@ EOT
             ));
             return 0;
         } else {
-            $this->writeSection($output, array(
-                '[Propel] Error',
-                '',
-                'An error has occured during the "propel:sql:build" command process. To get more details, run the command with the "--verbose" option.',
-            ), 'fg=white;bg=red');
+            $this->writeSection($output, ['[Propel] Error', '', 'An error has occured during the "propel:sql:build" command process. To get more details, run the command with the "--verbose" option.'], 'fg=white;bg=red');
             return 1;
         }
     }

@@ -58,10 +58,10 @@ EOT
      *
      * @throws \InvalidArgumentException When the target directory does not exist
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        list($name, $defaultConfig) = $this->getConnection($input, $output);
-        $fixtureDir = $input->getOption('dir') ? $input->getOption('dir') : $this->defaultFixturesDir;
+        [$name, $defaultConfig] = $this->getConnection($input, $output);
+        $fixtureDir = $input->getOption('dir') ?: $this->defaultFixturesDir;
 
         $path = realpath($this->getApplication()->getKernel()->getProjectDir()) . '/' . $fixtureDir;
 
@@ -82,10 +82,7 @@ EOT
         try {
             $dumper->dump($filename, $name);
         } catch (\Exception $e) {
-            $this->writeSection($output, array(
-                '[Propel] Exception',
-                '',
-                $e->getMessage()), 'fg=white;bg=red');
+            $this->writeSection($output, ['[Propel] Exception', '', $e->getMessage()], 'fg=white;bg=red');
 
             return 1;
         }

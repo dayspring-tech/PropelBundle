@@ -7,9 +7,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 abstract class BaseAbstractType extends AbstractType
 {
-    protected $options = array(
-        'name' => '',
-    );
+    protected $options = ['name' => ''];
 
     public function __construct($mergeOptions = null)
     {

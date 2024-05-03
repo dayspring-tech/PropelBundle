@@ -115,7 +115,7 @@ EOT
      *
      * @throws \InvalidArgumentException When the target directory does not exist
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->filesystem = new Filesystem();
 
@@ -126,9 +126,7 @@ EOT
         }
 
         if (!$this->absoluteFixturesPath && !file_exists($this->absoluteFixturesPath)) {
-            return $this->writeSection($output, array(
-                'The fixtures directory "' . $this->absoluteFixturesPath . '" does not exist.'
-            ), 'fg=white;bg=red');
+            return $this->writeSection($output, ['The fixtures directory "' . $this->absoluteFixturesPath . '" does not exist.'], 'fg=white;bg=red');
         }
 
         $noOptions = (!$input->getOption('xml') && !$input->getOption('sql') && !$input->getOption('yml'));
@@ -156,8 +154,6 @@ EOT
     /**
      * Load fixtures
      *
-     * @param  \Symfony\Component\Console\Input\InputInterface   $input
-     * @param  \Symfony\Component\Console\Output\OutputInterface $output
      * @return int
      */
     protected function loadFixtures(InputInterface $input, OutputInterface $output, $type = null)
@@ -172,7 +168,7 @@ EOT
             return -1;
         }
 
-        list($name, $defaultConfig) = $this->getConnection($input, $output);
+        [$name, $defaultConfig] = $this->getConnection($input, $output);
 
         if ('yml' === $type) {
             $loader = new YamlDataLoader($this->getApplication()->getKernel()->getProjectDir() . '/app', $this->getContainer());
@@ -185,10 +181,7 @@ EOT
         try {
             $nb = $loader->load($datas, $name);
         } catch (\Exception $e) {
-            $this->writeSection($output, array(
-                '[Propel] Exception',
-                '',
-                $e->getMessage()), 'fg=white;bg=red');
+            $this->writeSection($output, ['[Propel] Exception', '', $e->getMessage()], 'fg=white;bg=red');
 
             return -4;
         }
@@ -201,8 +194,6 @@ EOT
     /**
      * Load SQL fixtures
      *
-     * @param  \Symfony\Component\Console\Input\InputInterface   $input
-     * @param  \Symfony\Component\Console\Output\OutputInterface $output
      * @return int
      */
     protected function loadSqlFixtures(InputInterface $input, OutputInterface $output)
@@ -212,7 +203,7 @@ EOT
 
         $this->prepareCache($tmpdir);
 
-        list($name, $defaultConfig) = $this->getConnection($input, $output);
+        [$name, $defaultConfig] = $this->getConnection($input, $output);
 
         // Create a "sqldb.map" file
         $sqldbContent = '';
@@ -261,14 +252,7 @@ EOT
     protected function insertSql($config, $sqlDir, $schemaDir, $output)
     {
         // Insert SQL
-        $ret = $this->callPhing('insert-sql', array(
-            'propel.database.url'       => $config['connection']['dsn'],
-            'propel.database.database'  => $config['adapter'],
-            'propel.database.user'      => $config['connection']['user'],
-            'propel.database.password'  => $config['connection']['password'],
-            'propel.schema.dir'         => $schemaDir,
-            'propel.sql.dir'            => $sqlDir,
-        ));
+        $ret = $this->callPhing('insert-sql', ['propel.database.url'       => $config['connection']['dsn'], 'propel.database.database'  => $config['adapter'], 'propel.database.user'      => $config['connection']['user'], 'propel.database.password'  => $config['connection']['password'], 'propel.schema.dir'         => $schemaDir, 'propel.sql.dir'            => $sqlDir]);
 
         if (true === $ret) {
             $output->writeln('All SQL statements have been inserted.');
@@ -295,13 +279,13 @@ EOT
         $finder = new Finder();
         $finder->sortByName()->name('*.' . $type);
 
-        $files = $finder->in(null !== $in ? $in : $this->absoluteFixturesPath);
+        $files = $finder->in($in ?? $this->absoluteFixturesPath);
 
         if (null === $this->bundle) {
             return $files;
         }
 
-        $finalFixtureFiles = array();
+        $finalFixtureFiles = [];
         foreach ($files as $file) {
             $fixtureFilePath = str_replace($this->getFixturesPath($this->bundle) . DIRECTORY_SEPARATOR, '', $file->getRealPath());
             $logicalName = sprintf('@%s/Resources/fixtures/%s', $this->bundle->getName(), $fixtureFilePath);

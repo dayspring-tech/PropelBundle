@@ -31,7 +31,7 @@ class AbstractCommandTest extends TestCase
     {
         $this->mockLocator = $this->createPartialMock(FileLocator::class, ['locate']);
 
-        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
+        $container = $this->getMockBuilder(\Symfony\Component\DependencyInjection\ContainerInterface::class)->getMock();
         $container->expects($this->any())
             ->method('get')
             ->with('propel.file_locator')
@@ -56,7 +56,7 @@ class AbstractCommandTest extends TestCase
         $bundleDir = realpath(__DIR__ . '/../Fixtures/src/My/SuperBundle');
         $filename = 'Resources' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'a-schema.xml';
 
-        $bundle = $this->getMockBuilder('Symfony\Component\HttpKernel\Bundle\BundleInterface')->getMock();
+        $bundle = $this->getMockBuilder(\Symfony\Component\HttpKernel\Bundle\BundleInterface::class)->getMock();
         $bundle
             ->expects($this->once())
             ->method('getName')
@@ -76,7 +76,7 @@ class AbstractCommandTest extends TestCase
         $bundleDir = realpath(__DIR__ . '/../Fixtures/src/My/ThirdBundle');
         $filename = 'Resources' . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'propel' . DIRECTORY_SEPARATOR . 'schema.xml';
 
-        $bundle = $this->getMockBuilder('Symfony\Component\HttpKernel\Bundle\BundleInterface')->getMock();
+        $bundle = $this->getMockBuilder(\Symfony\Component\HttpKernel\Bundle\BundleInterface::class)->getMock();
         $bundle
             ->expects($this->once())
             ->method('getName')
@@ -93,7 +93,7 @@ class AbstractCommandTest extends TestCase
 
     public function testGetSchemasFromBundle()
     {
-        $bundle = $this->getMockBuilder('Symfony\Component\HttpKernel\Bundle\BundleInterface')->getMock();
+        $bundle = $this->getMockBuilder(\Symfony\Component\HttpKernel\Bundle\BundleInterface::class)->getMock();
         $bundle
             ->expects($this->once())
             ->method('getName')
@@ -123,7 +123,7 @@ class AbstractCommandTest extends TestCase
 
     public function testGetSchemasFromBundleWithNoSchema()
     {
-        $bundle = $this->getMockBuilder('Symfony\Component\HttpKernel\Bundle\BundleInterface')->getMock();
+        $bundle = $this->getMockBuilder(\Symfony\Component\HttpKernel\Bundle\BundleInterface::class)->getMock();
         $bundle
             ->expects($this->once())
             ->method('getPath')
@@ -138,8 +138,8 @@ class AbstractCommandTest extends TestCase
 
     public function testGetFinalSchemasWithNoSchemaInBundles()
     {
-        $bundle = $this->getMockBuilder('Symfony\Component\HttpKernel\Bundle\BundleInterface')->getMock();
-        $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\KernelInterface')->getMock();
+        $bundle = $this->getMockBuilder(\Symfony\Component\HttpKernel\Bundle\BundleInterface::class)->getMock();
+        $kernel = $this->getMockBuilder(\Symfony\Component\HttpKernel\KernelInterface::class)->getMock();
 
         $bundle
             ->expects($this->once())
@@ -149,7 +149,7 @@ class AbstractCommandTest extends TestCase
         $kernel
             ->expects($this->once())
             ->method('getBundles')
-            ->will($this->returnValue(array($bundle)));
+            ->will($this->returnValue([$bundle]));
 
         $schemas = $this->command->getFinalSchemas($kernel);
 
@@ -160,8 +160,8 @@ class AbstractCommandTest extends TestCase
 
     public function testGetFinalSchemas()
     {
-        $bundle = $this->getMockBuilder('Symfony\Component\HttpKernel\Bundle\BundleInterface')->getMock();
-        $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\KernelInterface')->getMock();
+        $bundle = $this->getMockBuilder(\Symfony\Component\HttpKernel\Bundle\BundleInterface::class)->getMock();
+        $kernel = $this->getMockBuilder(\Symfony\Component\HttpKernel\KernelInterface::class)->getMock();
 
         $bundle
             ->expects($this->once())
@@ -183,7 +183,7 @@ class AbstractCommandTest extends TestCase
         $kernel
             ->expects($this->once())
             ->method('getBundles')
-            ->will($this->returnValue(array($bundle)));
+            ->will($this->returnValue([$bundle]));
 
         $schemas = $this->command->getFinalSchemas($kernel);
 
@@ -197,8 +197,8 @@ class AbstractCommandTest extends TestCase
 
     public function testGetFinalSchemasWithGivenBundle()
     {
-        $bundle = $this->getMockBuilder('Symfony\Component\HttpKernel\Bundle\BundleInterface')->getMock();
-        $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\KernelInterface')->getMock();
+        $bundle = $this->getMockBuilder(\Symfony\Component\HttpKernel\Bundle\BundleInterface::class)->getMock();
+        $kernel = $this->getMockBuilder(\Symfony\Component\HttpKernel\KernelInterface::class)->getMock();
 
         $bundle
             ->expects($this->once())

@@ -29,15 +29,7 @@ class PanelController extends AbstractController
     {
         return $this->render(
             '@Propel/Panel/configuration.html.twig',
-            array(
-                'propel_version'     => \Propel::VERSION,
-                
-                'configuration'      => $propelConfiguration->getParameters(),
-                'default_connection' => $this->getParameter('propel.dbal.default_connection'),
-                'logging'            => $this->getParameter('propel.logging'),
-                'path'               => $this->getParameter('propel.path'),
-                'phing_path'         => $this->getParameter('propel.phing_path'),
-            )
+            ['propel_version'     => \Propel::VERSION, 'configuration'      => $propelConfiguration->getParameters(), 'default_connection' => $this->getParameter('propel.dbal.default_connection'), 'logging'            => $this->getParameter('propel.logging'), 'path'               => $this->getParameter('propel.path'), 'phing_path'         => $this->getParameter('propel.phing_path')]
         );
     }
 
@@ -71,16 +63,13 @@ class PanelController extends AbstractController
         try {
             $stmt = $db->doExplainPlan($con, $queries[$query]['sql']);
             $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return new Response('<div class="error">This query cannot be explained.</div>');
         }
 
         return $this->render(
             '@Propel/Panel/explain.html.twig',
-            array(
-                'data' => $results,
-                'query' => $query,
-            )
+            ['data' => $results, 'query' => $query]
         );
     }
 }

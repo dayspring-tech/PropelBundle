@@ -35,7 +35,7 @@ YAML;
         $filename = $this->getTempFile($fixtures);
 
         $loader = new YamlDataLoader(__DIR__.'/../../Fixtures/DataFixtures/Loader');
-        $loader->load(array($filename), 'default');
+        $loader->load([$filename], 'default');
 
         $books = \Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader\BookPeer::doSelect(new \Criteria(), $this->con);
         $this->assertCount(1, $books);
@@ -103,7 +103,7 @@ YAML;
         $con = $builder->build();
 
         $loader = new YamlDataLoader(__DIR__.'/../../Fixtures/DataFixtures/Loader');
-        $loader->load(array($filename), 'default');
+        $loader->load([$filename], 'default');
 
         $books = \Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader\YamlManyToManyBookPeer::doSelect(new \Criteria(), $con);
         $this->assertCount(2, $books);
@@ -191,7 +191,7 @@ YAML;
         $con = $builder->build();
 
         $loader = new YamlDataLoader(__DIR__.'/../../Fixtures/DataFixtures/Loader');
-        $loader->load(array($filename1, $filename2), 'default');
+        $loader->load([$filename1, $filename2], 'default');
 
         $books = \Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader\YamlManyToManyMultipleFilesBookPeer::doSelect(new \Criteria(), $con);
         $this->assertCount(2, $books);
@@ -228,7 +228,7 @@ YAML;
         $filename = $this->getTempFile($fixtures);
 
         $loader = new YamlDataLoader(__DIR__.'/../../Fixtures/DataFixtures/Loader');
-        $loader->load(array($filename), 'default');
+        $loader->load([$filename], 'default');
 
         $books = \Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader\BookPeer::doSelect(new \Criteria(), $this->con);
         $this->assertCount(0, $books);
@@ -252,7 +252,7 @@ YAML;
         $filename = $this->getTempFile($fixtures);
 
         $loader = new YamlDataLoader(__DIR__.'/../../Fixtures/DataFixtures/Loader');
-        $loader->load(array($filename), 'default');
+        $loader->load([$filename], 'default');
 
         $books = \Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader\BookPeer::doSelect(new \Criteria(), $this->con);
         $this->assertCount(0, $books);
@@ -276,7 +276,7 @@ YAML;
         $filename = $this->getTempFile($fixtures);
 
         $loader = new YamlDataLoader(__DIR__.'/../../Fixtures/DataFixtures/Loader');
-        $loader->load(array($filename), 'default');
+        $loader->load([$filename], 'default');
 
         $books = \Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader\BookPeer::doSelect(new \Criteria(), $this->con);
         $this->assertCount(0, $books);
@@ -290,7 +290,7 @@ YAML;
 
     public function testLoadWithFaker()
     {
-        if (!class_exists('Faker\Factory')) {
+        if (!class_exists(\Faker\Factory::class)) {
             $this->markTestSkipped('Faker is mandatory');
         }
 
@@ -307,23 +307,23 @@ YAML;
         $container->set('faker.generator', \Faker\Factory::create());
 
         $loader = new YamlDataLoader(__DIR__.'/../../Fixtures/DataFixtures/Loader', $container);
-        $loader->load(array($filename), 'default');
+        $loader->load([$filename], 'default');
 
         $books = \Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader\BookPeer::doSelect(new \Criteria(), $this->con);
         $this->assertCount(1, $books);
 
         $book = $books[0];
         $this->assertNotNull($book->getName());
-        $this->assertNotEquals('null', strtolower($book->getName()));
+        $this->assertNotEquals('null', strtolower((string) $book->getName()));
         $this->assertMatchesRegularExpression('#[a-z]+#', $book->getName());
         $this->assertNotNull($book->getDescription());
-        $this->assertNotEquals('null', strtolower($book->getDescription()));
+        $this->assertNotEquals('null', strtolower((string) $book->getDescription()));
         $this->assertMatchesRegularExpression('#[\w ]+#', $book->getDescription());
     }
 
     public function testLoadWithFakerDateTime()
     {
-        if (!class_exists('Faker\Factory')) {
+        if (!class_exists(\Faker\Factory::class)) {
             $this->markTestSkipped('Faker is mandatory');
         }
 
@@ -340,7 +340,7 @@ YAML;
         $container->set('faker.generator', \Faker\Factory::create());
 
         $loader = new YamlDataLoader(__DIR__.'/../../Fixtures/DataFixtures/Loader', $container);
-        $loader->load(array($filename), 'default');
+        $loader->load([$filename], 'default');
 
         $books = \Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader\BookPeer::doSelect(new \Criteria(), $this->con);
         $this->assertCount(1, $books);
@@ -399,7 +399,7 @@ YAML;
         $con = $builder->build();
 
         $loader = new YamlDataLoader(__DIR__.'/../../Fixtures/DataFixtures/Loader');
-        $loader->load(array($filename), 'default');
+        $loader->load([$filename], 'default');
 
         $books = \Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader\YamlInheritedRelationshipBookPeer::doSelect(new \Criteria(), $con);
         $this->assertCount(1, $books);
@@ -474,7 +474,7 @@ YAML;
         $con = $builder->build();
 
         $loader = new YamlDataLoader(__DIR__.'/../../Fixtures/DataFixtures/Loader');
-        $loader->load(array($filename), 'default');
+        $loader->load([$filename], 'default');
 
         $authors = \Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader\YamlInheritedM2MRelationshipNobelizedAuthorPeer::doSelect(new \Criteria(), $con);
         $this->assertCount(1, $authors);
@@ -509,12 +509,12 @@ YAML;
         $con = $builder->build();
 
         $loader = new YamlDataLoader(__DIR__.'/../../Fixtures/DataFixtures/Loader');
-        $loader->load(array($filename), 'default');
+        $loader->load([$filename], 'default');
 
         $book = \Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader\YamlBookWithObjectQuery::create(null, $con)->findOne();
 
         $this->assertInstanceOf('\Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader\YamlBookWithObject', $book);
-        $this->assertEquals(array('opt1' => 2012, 'opt2' => 140, 'inner' => array('subOpt' => 123)), $book->getOptions());
+        $this->assertEquals(['opt1' => 2012, 'opt2' => 140, 'inner' => ['subOpt' => 123]], $book->getOptions());
     }
 
     public function testLoadDelegatedOnPrimaryKey()
@@ -559,7 +559,7 @@ YAML;
         $con = $builder->build();
 
         $loader = new YamlDataLoader(__DIR__.'/../../Fixtures/DataFixtures/Loader');
-        $loader->load(array($filename), 'default');
+        $loader->load([$filename], 'default');
 
         $authors = \Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader\YamlDelegateOnPrimaryKeyAuthorPeer::doSelect(new \Criteria(), $con);
         $this->assertCount(1, $authors);

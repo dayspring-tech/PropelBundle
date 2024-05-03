@@ -31,11 +31,7 @@ class TestCase extends PHPUnit_Framework_TestCase
 
     public function getContainer()
     {
-        return new ContainerBuilder(new ParameterBag(array(
-            'kernel.debug'      => false,
-            'kernel.environment'   => 'prod',
-            'kernel.project_dir'   => __DIR__ . '/',
-        )));
+        return new ContainerBuilder(new ParameterBag(['kernel.debug'      => false, 'kernel.environment'   => 'prod', 'kernel.project_dir'   => __DIR__ . '/']));
     }
 
     protected function loadPropelQuickBuilder()

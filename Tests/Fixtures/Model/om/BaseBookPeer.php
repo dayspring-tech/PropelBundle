@@ -22,40 +22,40 @@ use Propel\Bundle\PropelBundle\Tests\Fixtures\Model\map\BookTableMap;
 abstract class BaseBookPeer
 {
     /** the default database name for this class */
-    const DATABASE_NAME = 'mydb';
+    public const DATABASE_NAME = 'mydb';
 
     /** the table name for this class */
-    const TABLE_NAME = 'book';
+    public const TABLE_NAME = 'book';
 
     /** the related Propel class for this table */
-    const OM_CLASS = 'Propel\\Bundle\\PropelBundle\\Tests\\Fixtures\\Model\\Book';
+    public const OM_CLASS = 'Propel\\Bundle\\PropelBundle\\Tests\\Fixtures\\Model\\Book';
 
     /** A class that can be returned by this peer. */
-    const CLASS_DEFAULT = 'vendor/bundles/Propel/PropelBundle/Tests/Fixtures/Model.Book';
+    public const CLASS_DEFAULT = 'vendor/bundles/Propel/PropelBundle/Tests/Fixtures/Model.Book';
 
     /** the related TableMap class for this table */
-    const TM_CLASS = 'BookTableMap';
+    public const TM_CLASS = 'BookTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 3;
+    public const NUM_COLUMNS = 3;
 
     /** The number of lazy-loaded columns. */
-    const NUM_LAZY_LOAD_COLUMNS = 0;
+    public const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 3;
+    public const NUM_HYDRATE_COLUMNS = 3;
 
     /** the column name for the ID field */
-    const ID = 'book.ID';
+    public const ID = 'book.ID';
 
     /** the column name for the NAME field */
-    const NAME = 'book.NAME';
+    public const NAME = 'book.NAME';
 
     /** the column name for the SLUG field */
-    const SLUG = 'book.SLUG';
+    public const SLUG = 'book.SLUG';
 
     /** The default string format for model objects of the related table **/
-    const DEFAULT_STRING_FORMAT = 'YAML';
+    public const DEFAULT_STRING_FORMAT = 'YAML';
 
     /**
      * An identity map to hold any loaded instances of Book objects.
@@ -63,7 +63,7 @@ abstract class BaseBookPeer
      * queries.
      * @var array Book[]
      */
-    public static $instances = array();
+    public static $instances = [];
 
     /**
      * holds an array of fieldnames
@@ -71,14 +71,7 @@ abstract class BaseBookPeer
      * first dimension keys are the type constants
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
-    protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Name', 'Slug', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'name', 'slug', ),
-        BasePeer::TYPE_COLNAME => array (self::ID, self::NAME, self::SLUG, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'NAME', 'SLUG', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'name', 'slug', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, )
-    );
+    protected static $fieldNames = [BasePeer::TYPE_PHPNAME => ['Id', 'Name', 'Slug'], BasePeer::TYPE_STUDLYPHPNAME => ['id', 'name', 'slug'], BasePeer::TYPE_COLNAME => [self::ID, self::NAME, self::SLUG], BasePeer::TYPE_RAW_COLNAME => ['ID', 'NAME', 'SLUG'], BasePeer::TYPE_FIELDNAME => ['id', 'name', 'slug'], BasePeer::TYPE_NUM => [0, 1, 2]];
 
     /**
      * holds an array of keys for quick access to the fieldnames array
@@ -86,14 +79,7 @@ abstract class BaseBookPeer
      * first dimension keys are the type constants
      * e.g. self::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
-    protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Name' => 1, 'Slug' => 2, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'name' => 1, 'slug' => 2, ),
-        BasePeer::TYPE_COLNAME => array (self::ID => 0, self::NAME => 1, self::SLUG => 2, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'NAME' => 1, 'SLUG' => 2, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'name' => 1, 'slug' => 2, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, )
-    );
+    protected static $fieldKeys = [BasePeer::TYPE_PHPNAME => ['Id' => 0, 'Name' => 1, 'Slug' => 2], BasePeer::TYPE_STUDLYPHPNAME => ['id' => 0, 'name' => 1, 'slug' => 2], BasePeer::TYPE_COLNAME => [self::ID => 0, self::NAME => 1, self::SLUG => 2], BasePeer::TYPE_RAW_COLNAME => ['ID' => 0, 'NAME' => 1, 'SLUG' => 2], BasePeer::TYPE_FIELDNAME => ['id' => 0, 'name' => 1, 'slug' => 2], BasePeer::TYPE_NUM => [0, 1, 2]];
 
     /**
      * Translates a fieldname to another type
@@ -108,7 +94,7 @@ abstract class BaseBookPeer
     public static function translateFieldName($name, $fromType, $toType)
     {
         $toNames = self::getFieldNames($toType);
-        $key = isset(self::$fieldKeys[$fromType][$name]) ? self::$fieldKeys[$fromType][$name] : null;
+        $key = self::$fieldKeys[$fromType][$name] ?? null;
         if ($key === null) {
             throw new PropelException("'$name' could not be found in the field names of type '$fromType'. These are: " . print_r(self::$fieldKeys[$fromType], true));
         }
@@ -179,9 +165,7 @@ abstract class BaseBookPeer
     /**
      * Returns the number of rows matching criteria.
      *
-     * @param  Criteria  $criteria
      * @param  boolean   $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
-     * @param  PropelPDO $con
      * @return int       Number of matching rows.
      */
     public static function doCount(Criteria $criteria, $distinct = false, PropelPDO $con = null)
@@ -224,7 +208,6 @@ abstract class BaseBookPeer
      * Selects one object from the DB.
      *
      * @param  Criteria        $criteria object used to create the SELECT statement.
-     * @param  PropelPDO       $con
      * @return Book
      * @throws PropelException Any exceptions caught during processing will be
      *         rethrown wrapped into a PropelException.
@@ -244,7 +227,6 @@ abstract class BaseBookPeer
      * Selects several row from the DB.
      *
      * @param  Criteria        $criteria The Criteria object used to build the SELECT statement.
-     * @param  PropelPDO       $con
      * @return array           Array of selected Objects
      * @throws PropelException Any exceptions caught during processing will be
      *         rethrown wrapped into a PropelException.
@@ -315,7 +297,7 @@ abstract class BaseBookPeer
      *
      * @param mixed $value A Book object or a primary key value.
      */
-    public static function removeInstanceFromPool($value)
+    public static function removeInstanceFromPool(mixed $value)
     {
         if (Propel::isInstancePoolingEnabled() && $value !== null) {
             if (is_object($value) && $value instanceof Book) {
@@ -324,7 +306,7 @@ abstract class BaseBookPeer
                 // assume we've been passed a primary key
                 $key = (string) $value;
             } else {
-                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or Book object; got " . (is_object($value) ? get_class($value) . ' object.' : var_export($value,true)));
+                $e = new PropelException("Invalid value passed to removeInstanceFromPool().  Expected primary key or Book object; got " . (is_object($value) ? $value::class . ' object.' : var_export($value,true)));
                 throw $e;
             }
 
@@ -360,7 +342,7 @@ abstract class BaseBookPeer
      */
     public static function clearInstancePool()
     {
-        self::$instances = array();
+        self::$instances = [];
     }
 
     /**
@@ -414,7 +396,7 @@ abstract class BaseBookPeer
      */
     public static function populateObjects(PDOStatement $stmt)
     {
-        $results = array();
+        $results = [];
 
         // set the class once to avoid overhead in the loop
         $cls = BookPeer::getOMClass(false);
@@ -461,7 +443,7 @@ abstract class BaseBookPeer
             BookPeer::addInstanceToPool($obj, $key);
         }
 
-        return array($obj, $col);
+        return [$obj, $col];
     }
 
     /**
@@ -512,7 +494,7 @@ abstract class BaseBookPeer
      * @throws PropelException Any exceptions caught during processing will be
      *         rethrown wrapped into a PropelException.
      */
-    public static function doInsert($values, PropelPDO $con = null)
+    public static function doInsert(mixed $values, PropelPDO $con = null)
     {
         if ($con === null) {
             $con = Propel::getConnection(BookPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
@@ -554,7 +536,7 @@ abstract class BaseBookPeer
      * @throws PropelException Any exceptions caught during processing will be
      *         rethrown wrapped into a PropelException.
      */
-    public static function doUpdate($values, PropelPDO $con = null)
+    public static function doUpdate(mixed $values, PropelPDO $con = null)
     {
         if ($con === null) {
             $con = Propel::getConnection(BookPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
@@ -626,7 +608,7 @@ abstract class BaseBookPeer
      * @throws PropelException Any exceptions caught during processing will be
      *         rethrown wrapped into a PropelException.
      */
-     public static function doDelete($values, PropelPDO $con = null)
+     public static function doDelete(mixed $values, PropelPDO $con = null)
      {
         if ($con === null) {
             $con = Propel::getConnection(BookPeer::DATABASE_NAME, Propel::CONNECTION_WRITE);
@@ -686,16 +668,16 @@ abstract class BaseBookPeer
      *
      * @return mixed TRUE if all columns are valid or the error message of the first invalid column.
      */
-    public static function doValidate($obj, $cols = null)
+    public static function doValidate($obj, mixed $cols = null)
     {
-        $columns = array();
+        $columns = [];
 
         if ($cols) {
             $dbMap = Propel::getDatabaseMap(BookPeer::DATABASE_NAME);
             $tableMap = $dbMap->getTable(BookPeer::TABLE_NAME);
 
             if (! is_array($cols)) {
-                $cols = array($cols);
+                $cols = [$cols];
             }
 
             foreach ($cols as $colName) {
@@ -753,7 +735,7 @@ abstract class BaseBookPeer
 
         $objs = null;
         if (empty($pks)) {
-            $objs = array();
+            $objs = [];
         } else {
             $criteria = new Criteria(BookPeer::DATABASE_NAME);
             $criteria->add(BookPeer::ID, $pks, Criteria::IN);

@@ -13,17 +13,11 @@ namespace Propel\Bundle\PropelBundle\Tests\Fixtures;
 
 class TranslatableItemI18n implements \Persistent
 {
-    private $id;
-    private $locale;
-    private $value;
     private $value2;
     private $item;
 
-    public function __construct($id = null, $locale = null, $value = null)
+    public function __construct(private $id = null, private $locale = null, private $value = null)
     {
-        $this->id = $id;
-        $this->locale = $locale;
-        $this->value = $value;
     }
 
     public function getId()

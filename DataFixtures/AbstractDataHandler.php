@@ -18,10 +18,6 @@ use Symfony\Component\Finder\Finder;
 abstract class AbstractDataHandler
 {
     /**
-     * @var string
-     */
-    protected $rootDir;
-    /**
      * @var \PDO
      */
     protected $con;
@@ -35,9 +31,8 @@ abstract class AbstractDataHandler
      *
      * @param string $rootDir The root directory.
      */
-    public function __construct($rootDir)
+    public function __construct(protected $rootDir)
     {
-        $this->rootDir = $rootDir;
     }
 
     /**
@@ -99,7 +94,7 @@ abstract class AbstractDataHandler
      */
     private function guessFullClassName($path, $shortClassName)
     {
-        $array = array();
+        $array = [];
         $path  = str_replace('/', '\\', $path);
 
         $array[] = $path;
@@ -129,7 +124,7 @@ abstract class AbstractDataHandler
      */
     protected function getModelSearchPaths($connectionName) {
         $configuration = Propel::getConfiguration();
-        $searchPath = array();
+        $searchPath = [];
 
         if (!empty($configuration['datasources'][$connectionName]['connection']['model_paths'])) {
             $modelPaths = $configuration['datasources'][$connectionName]['connection']['model_paths'];

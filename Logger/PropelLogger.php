@@ -30,7 +30,7 @@ class PropelLogger implements \BasicLogger
     /**
      * @var array
      */
-    protected $queries = array();
+    protected $queries = [];
 
     /**
      * @var Stopwatch
@@ -56,7 +56,7 @@ class PropelLogger implements \BasicLogger
 
     public function reset()
     {
-        $this->queries = array();
+        $this->queries = [];
     }
 
     /**
@@ -144,29 +144,15 @@ class PropelLogger implements \BasicLogger
         if (null !== $this->logger) {
             $message = is_string($message) ? $message : var_export($message, true);
 
-            switch ($severity) {
-                case 'alert':
-                    $this->logger->alert($message);
-                    break;
-                case 'crit':
-                    $this->logger->critical($message);
-                    break;
-                case 'err':
-                    $this->logger->error($message);
-                    break;
-                case 'warning':
-                    $this->logger->warning($message);
-                    break;
-                case 'notice':
-                    $this->logger->notice($message);
-                    break;
-                case 'info':
-                    $this->logger->info($message);
-                    break;
-                case 'debug':
-                default:
-                    $this->logger->debug($message);
-            }
+            match ($severity) {
+                'alert' => $this->logger->alert($message),
+                'crit' => $this->logger->critical($message),
+                'err' => $this->logger->error($message),
+                'warning' => $this->logger->warning($message),
+                'notice' => $this->logger->notice($message),
+                'info' => $this->logger->info($message),
+                default => $this->logger->debug($message),
+            };
         }
     }
 

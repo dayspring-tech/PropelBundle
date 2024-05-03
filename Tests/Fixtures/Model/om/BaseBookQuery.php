@@ -47,7 +47,7 @@ abstract class BaseBookQuery extends ModelCriteria
      * @param string $modelName  The phpName of a model, e.g. 'Book'
      * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'mydb', $modelName = 'Propel\\Bundle\\PropelBundle\\Tests\\Fixtures\\Model\\Book', $modelAlias = null)
+    public function __construct($dbName = 'mydb', $modelName = \Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class, $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
@@ -129,7 +129,7 @@ abstract class BaseBookQuery extends ModelCriteria
      *
      * @return BookQuery The current query, for fluid interface
      */
-    public function filterByPrimaryKey($key)
+    public function filterByPrimaryKey(mixed $key)
     {
         return $this->addUsingAlias(BookPeer::ID, $key, Criteria::EQUAL);
     }
@@ -164,7 +164,7 @@ abstract class BaseBookQuery extends ModelCriteria
      *
      * @return BookQuery The current query, for fluid interface
      */
-    public function filterById($id = null, $comparison = null)
+    public function filterById(mixed $id = null, $comparison = null)
     {
         if (is_array($id) && null === $comparison) {
             $comparison = Criteria::IN;
@@ -193,8 +193,8 @@ abstract class BaseBookQuery extends ModelCriteria
         if (null === $comparison) {
             if (is_array($name)) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $name)) {
-                $name = str_replace('*', '%', $name);
+            } elseif (preg_match('/[\%\*]/', (string) $name)) {
+                $name = str_replace('*', '%', (string) $name);
                 $comparison = Criteria::LIKE;
             }
         }
@@ -222,8 +222,8 @@ abstract class BaseBookQuery extends ModelCriteria
         if (null === $comparison) {
             if (is_array($slug)) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $slug)) {
-                $slug = str_replace('*', '%', $slug);
+            } elseif (preg_match('/[\%\*]/', (string) $slug)) {
+                $slug = str_replace('*', '%', (string) $slug);
                 $comparison = Criteria::LIKE;
             }
         }

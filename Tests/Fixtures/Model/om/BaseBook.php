@@ -19,13 +19,13 @@ use PropelPDO;
  *
  *
  */
-abstract class BaseBook extends BaseObject  implements Persistent
+abstract class BaseBook extends BaseObject  implements Persistent, \Stringable
 {
 
     /**
      * Peer class name
      */
-    const PEER = 'Propel\\Bundle\\PropelBundle\\Tests\\Fixtures\\Model\\BookPeer';
+    public const PEER = 'Propel\\Bundle\\PropelBundle\\Tests\\Fixtures\\Model\\BookPeer';
 
     /**
      * The Peer class.
@@ -362,7 +362,6 @@ abstract class BaseBook extends BaseObject  implements Persistent
      * If the object is new, it inserts it; otherwise an update is performed.
      * All related objects are also updated in this method.
      *
-     * @param  PropelPDO       $con
      * @return int             The number of rows affected by this insert/update and any referring fk objects' save() operations.
      * @throws PropelException
      * @see        save()
@@ -407,7 +406,7 @@ abstract class BaseBook extends BaseObject  implements Persistent
      * Array of ValidationFailed objects.
      * @var        array ValidationFailed[]
      */
-    protected $validationFailures = array();
+    protected $validationFailures = [];
 
     /**
      * Gets any ValidationFailed objects that resulted from last call to validate().
@@ -432,11 +431,11 @@ abstract class BaseBook extends BaseObject  implements Persistent
      * @see        doValidate()
      * @see        getValidationFailures()
      */
-    public function validate($columns = null)
+    public function validate(mixed $columns = null)
     {
         $res = $this->doValidate($columns);
         if ($res === true) {
-            $this->validationFailures = array();
+            $this->validationFailures = [];
 
             return true;
         } else {
@@ -462,7 +461,7 @@ abstract class BaseBook extends BaseObject  implements Persistent
             $this->alreadyInValidation = true;
             $retval = null;
 
-            $failureMap = array();
+            $failureMap = [];
 
 
             if (($retval = BookPeer::doValidate($this, $columns)) !== true) {
@@ -503,20 +502,12 @@ abstract class BaseBook extends BaseObject  implements Persistent
      */
     public function getByPosition($pos)
     {
-        switch ($pos) {
-            case 0:
-                return $this->getId();
-                break;
-            case 1:
-                return $this->getName();
-                break;
-            case 2:
-                return $this->getSlug();
-                break;
-            default:
-                return null;
-                break;
-        } // switch()
+        return match ($pos) {
+            0 => $this->getId(),
+            1 => $this->getName(),
+            2 => $this->getSlug(),
+            default => null,
+        }; // switch()
     }
 
     /**
@@ -533,18 +524,14 @@ abstract class BaseBook extends BaseObject  implements Persistent
      *
      * @return array an associative array containing the field names (as keys) and field values
      */
-    public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
+    public function toArray($keyType = BasePeer::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = [])
     {
         if (isset($alreadyDumpedObjects['Book'][$this->getPrimaryKey()])) {
             return '*RECURSION*';
         }
         $alreadyDumpedObjects['Book'][$this->getPrimaryKey()] = true;
         $keys = BookPeer::getFieldNames($keyType);
-        $result = array(
-            $keys[0] => $this->getId(),
-            $keys[1] => $this->getName(),
-            $keys[2] => $this->getSlug(),
-        );
+        $result = [$keys[0] => $this->getId(), $keys[1] => $this->getName(), $keys[2] => $this->getSlug()];
 
         return $result;
     }
@@ -559,7 +546,7 @@ abstract class BaseBook extends BaseObject  implements Persistent
      *                     BasePeer::TYPE_COLNAME, BasePeer::TYPE_FIELDNAME, BasePeer::TYPE_NUM
      * @return void
      */
-    public function setByName($name, $value, $type = BasePeer::TYPE_PHPNAME)
+    public function setByName($name, mixed $value, $type = BasePeer::TYPE_PHPNAME)
     {
         $pos = BookPeer::translateFieldName($name, $type, BasePeer::TYPE_NUM);
 
@@ -574,7 +561,7 @@ abstract class BaseBook extends BaseObject  implements Persistent
      * @param  mixed $value field value
      * @return void
      */
-    public function setByPosition($pos, $value)
+    public function setByPosition($pos, mixed $value)
     {
         switch ($pos) {
             case 0:
@@ -711,7 +698,7 @@ abstract class BaseBook extends BaseObject  implements Persistent
     public function copy($deepCopy = false)
     {
         // we use get_class(), because this might be a subclass
-        $clazz = get_class($this);
+        $clazz = static::class;
         $copyObj = new $clazz();
         $this->copyInto($copyObj, $deepCopy);
 
@@ -773,7 +760,7 @@ abstract class BaseBook extends BaseObject  implements Persistent
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return (string) $this->exportTo(BookPeer::DEFAULT_STRING_FORMAT);
     }

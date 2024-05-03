@@ -19,7 +19,7 @@ class PropelExtensionTest extends TestCase
         $container = $this->getContainer();
         $loader = new PropelExtension();
         try {
-            $loader->load(array(array()), $container);
+            $loader->load([[]], $container);
             $this->fail();
         } catch (\Exception $e) {
             $this->assertInstanceOf('InvalidArgumentException', $e,
@@ -29,10 +29,7 @@ class PropelExtensionTest extends TestCase
         $container = $this->getContainer();
         $loader = new PropelExtension();
         try {
-            $loader->load(array(array(
-                'path' => '/propel',
-                'dbal' => array(),
-            )), $container);
+            $loader->load([['path' => '/propel', 'dbal' => []]], $container);
             $this->fail();
         } catch (\Exception $e) {
             $this->assertInstanceOf('InvalidArgumentException', $e,
@@ -41,11 +38,7 @@ class PropelExtensionTest extends TestCase
 
         $container = $this->getContainer();
         $loader = new PropelExtension();
-        $loader->load(array(array(
-            'path'       => '/propel',
-            'phing_path' => '/phing',
-            'dbal'       => array()
-        )), $container);
+        $loader->load([['path'       => '/propel', 'phing_path' => '/phing', 'dbal'       => []]], $container);
         $this->assertEquals('/propel',  $container->getParameter('propel.path'), '->load() requires the Propel path');
         $this->assertEquals('/phing',   $container->getParameter('propel.phing_path'), '->load() requires the Phing path');
     }
@@ -55,25 +48,13 @@ class PropelExtensionTest extends TestCase
         $container = $this->getContainer();
         $loader = new PropelExtension();
 
-        $loader->load(array(array(
-            'path'       => '/propel',
-            'phing_path' => '/phing',
-            'dbal' => array(
-                'default_connection' => 'foo',
-            )
-        )), $container);
+        $loader->load([['path'       => '/propel', 'phing_path' => '/phing', 'dbal' => ['default_connection' => 'foo']]], $container);
         $this->assertEquals('foo', $container->getParameter('propel.dbal.default_connection'), '->dbalLoad() overrides existing configuration options');
 
         $container = $this->getContainer();
         $loader = new PropelExtension();
 
-        $loader->load(array(array(
-            'path'          => '/propel',
-            'phing_path'    => '/phing',
-            'dbal'          => array(
-                'password' => 'foo',
-            )
-        )), $container);
+        $loader->load([['path'          => '/propel', 'phing_path'    => '/phing', 'dbal'          => ['password' => 'foo']]], $container);
 
         $arguments = $container->getDefinition('propel.configuration')->getArguments();
         $config = $arguments[0];
@@ -81,12 +62,7 @@ class PropelExtensionTest extends TestCase
         $this->assertEquals('foo', $config['datasources']['default']['connection']['password']);
         $this->assertEquals('root', $config['datasources']['default']['connection']['user']);
 
-        $loader->load(array(array(
-            'path' => '/propel',
-            'dbal' => array(
-                'user' => 'foo',
-            )
-        )), $container);
+        $loader->load([['path' => '/propel', 'dbal' => ['user' => 'foo']]], $container);
         $this->assertEquals('foo', $config['datasources']['default']['connection']['password']);
         $this->assertEquals('root', $config['datasources']['default']['connection']['user']);
 
@@ -97,26 +73,13 @@ class PropelExtensionTest extends TestCase
         $container = $this->getContainer();
         $loader = new PropelExtension();
 
-        $config_base = array(
-            'path'       => '/propel',
-            'phing_path' => '/propel',
-        );
+        $config_base = ['path'       => '/propel', 'phing_path' => '/propel'];
 
-        $config_prod = array('dbal' => array(
-            'user'      => 'toto',
-            'password'  => 'titi',
-            'dsn'       => 'foobar',
-            'driver'    => 'my_driver',
-            'options'   => array('o1', 'o2')
-        ));
+        $config_prod = ['dbal' => ['user'      => 'toto', 'password'  => 'titi', 'dsn'       => 'foobar', 'driver'    => 'my_driver', 'options'   => ['o1', 'o2']]];
 
-        $config_dev = array('dbal' => array(
-            'user'      => 'toto_dev',
-            'password'  => 'titi_dev',
-            'dsn'       => 'foobar',
-        ));
+        $config_dev = ['dbal' => ['user'      => 'toto_dev', 'password'  => 'titi_dev', 'dsn'       => 'foobar']];
 
-        $configs = array($config_base, $config_prod, $config_dev);
+        $configs = [$config_base, $config_prod, $config_dev];
 
         $loader->load($configs, $container);
 
@@ -135,31 +98,15 @@ class PropelExtensionTest extends TestCase
         $container = $this->getContainer();
         $loader = new PropelExtension();
 
-        $config_base = array(
-            'path'       => '/propel',
-            'phing_path' => '/phing',
-        );
+        $config_base = ['path'       => '/propel', 'phing_path' => '/phing'];
 
-        $config_mysql = array(
-            'user'      => 'mysql_usr',
-            'password'  => 'mysql_pwd',
-            'dsn'       => 'mysql_dsn',
-            'driver'    => 'mysql',
-        );
+        $config_mysql = ['user'      => 'mysql_usr', 'password'  => 'mysql_pwd', 'dsn'       => 'mysql_dsn', 'driver'    => 'mysql'];
 
-        $config_sqlite = array(
-            'user'      => 'sqlite_usr',
-            'password'  => 'sqlite_pwd',
-            'dsn'       => 'sqlite_dsn',
-            'driver'    => 'sqlite',
-        );
+        $config_sqlite = ['user'      => 'sqlite_usr', 'password'  => 'sqlite_pwd', 'dsn'       => 'sqlite_dsn', 'driver'    => 'sqlite'];
 
-        $config_connections = array(
-            'default_connection' => 'sqlite',
-            'connections' => array('mysql' => $config_mysql, 'sqlite' => $config_sqlite,
-        ));
+        $config_connections = ['default_connection' => 'sqlite', 'connections' => ['mysql' => $config_mysql, 'sqlite' => $config_sqlite]];
 
-        $configs = array($config_base, array('dbal' => $config_connections));
+        $configs = [$config_base, ['dbal' => $config_connections]];
 
         $loader->load($configs, $container);
 
@@ -171,12 +118,9 @@ class PropelExtensionTest extends TestCase
         $this->assertEquals('sqlite_dsn',  $config['datasources']['sqlite']['connection']['dsn']);
         $this->assertEquals('sqlite',      $config['datasources']['sqlite']['adapter']);
 
-        $config_connections = array(
-            'default_connection' => 'mysql',
-            'connections' => array('mysql' => $config_mysql, 'sqlite' => $config_sqlite,
-        ));
+        $config_connections = ['default_connection' => 'mysql', 'connections' => ['mysql' => $config_mysql, 'sqlite' => $config_sqlite]];
 
-        $configs = array($config_base, array('dbal' => $config_connections));
+        $configs = [$config_base, ['dbal' => $config_connections]];
 
         $loader->load($configs, $container);
 
@@ -194,28 +138,13 @@ class PropelExtensionTest extends TestCase
         $container = $this->getContainer();
         $loader = new PropelExtension();
 
-        $config_base = array(
-            'path'       => '/propel',
-            'phing_path' => '/phing',
-        );
+        $config_base = ['path'       => '/propel', 'phing_path' => '/phing'];
 
-        $config_mysql = array(
-            'user'      => 'mysql_usr',
-            'password'  => 'mysql_pwd',
-            'dsn'       => 'mysql_dsn',
-            'driver'    => 'mysql',
-            'settings'  => array(
-                'charset' => array('value' => 'UTF8'),
-            ),
-        );
+        $config_mysql = ['user'      => 'mysql_usr', 'password'  => 'mysql_pwd', 'dsn'       => 'mysql_dsn', 'driver'    => 'mysql', 'settings'  => ['charset' => ['value' => 'UTF8']]];
 
-        $config_connections = array(
-            'default_connection'    => 'mysql',
-            'connections'           => array(
-                'mysql' => $config_mysql,
-        ));
+        $config_connections = ['default_connection'    => 'mysql', 'connections'           => ['mysql' => $config_mysql]];
 
-        $configs = array($config_base, array('dbal' => $config_connections));
+        $configs = [$config_base, ['dbal' => $config_connections]];
 
         $loader->load($configs, $container);
 
@@ -237,23 +166,11 @@ class PropelExtensionTest extends TestCase
         $container = $this->getContainer();
         $loader = new PropelExtension();
 
-        $config_base = array(
-            'path'       => '/propel',
-            'phing_path' => '/phing',
-        );
+        $config_base = ['path'       => '/propel', 'phing_path' => '/phing'];
 
-        $config_mysql = array(
-            'user'      => 'mysql_usr',
-            'password'  => 'mysql_pwd',
-            'dsn'       => 'mysql_dsn',
-            'driver'    => 'mysql',
-            'settings'  => array(
-                'charset' => array('value' => 'UTF8'),
-                'queries' => array('query' => 'SET NAMES UTF8')
-            ),
-        );
+        $config_mysql = ['user'      => 'mysql_usr', 'password'  => 'mysql_pwd', 'dsn'       => 'mysql_dsn', 'driver'    => 'mysql', 'settings'  => ['charset' => ['value' => 'UTF8'], 'queries' => ['query' => 'SET NAMES UTF8']]];
 
-        $configs = array($config_base, array('dbal' => $config_mysql));
+        $configs = [$config_base, ['dbal' => $config_mysql]];
 
         $loader->load($configs, $container);
 
@@ -276,36 +193,11 @@ class PropelExtensionTest extends TestCase
         $container = $this->getContainer();
         $loader = new PropelExtension();
 
-        $config_base = array(
-            'path'       => '/propel',
-            'phing_path' => '/phing',
-        );
+        $config_base = ['path'       => '/propel', 'phing_path' => '/phing'];
 
-        $config_mysql = array(
-            'user'      => 'mysql_usr',
-            'password'  => 'mysql_pwd',
-            'dsn'       => 'mysql_dsn',
-            'driver'    => 'mysql',
-            'slaves'  => array(
-                'mysql_slave1' => array(
-                    'user' => 'mysql_usrs1',
-                    'password' => 'mysql_pwds1',
-                    'dsn' => 'mysql_dsns1',
-                ),
-                'mysql_slave2' => array(
-                    'user' => 'mysql_usrs2',
-                    'password' => 'mysql_pwds2',
-                    'dsn' => 'mysql_dsns2',
-                ),
-            ),
-        );
+        $config_mysql = ['user'      => 'mysql_usr', 'password'  => 'mysql_pwd', 'dsn'       => 'mysql_dsn', 'driver'    => 'mysql', 'slaves'  => ['mysql_slave1' => ['user' => 'mysql_usrs1', 'password' => 'mysql_pwds1', 'dsn' => 'mysql_dsns1'], 'mysql_slave2' => ['user' => 'mysql_usrs2', 'password' => 'mysql_pwds2', 'dsn' => 'mysql_dsns2']]];
 
-        $configs = array($config_base, array(
-            'dbal' => array(
-                'default_connection' => 'master',
-                'connections'        => array('master' => $config_mysql)
-            )
-        ));
+        $configs = [$config_base, ['dbal' => ['default_connection' => 'master', 'connections'        => ['master' => $config_mysql]]]];
         $loader->load($configs, $container);
 
         $arguments = $container->getDefinition('propel.configuration')->getArguments();
@@ -336,19 +228,11 @@ class PropelExtensionTest extends TestCase
         $container = $this->getContainer();
         $loader = new PropelExtension();
 
-        $config_base = array(
-            'path'       => '/propel',
-            'phing_path' => '/phing',
-        );
+        $config_base = ['path'       => '/propel', 'phing_path' => '/phing'];
 
-        $config_mysql = array(
-            'user'      => 'mysql_usr',
-            'password'  => 'mysql_pwd',
-            'dsn'       => 'mysql_dsn',
-            'driver'    => 'mysql'
-        );
+        $config_mysql = ['user'      => 'mysql_usr', 'password'  => 'mysql_pwd', 'dsn'       => 'mysql_dsn', 'driver'    => 'mysql'];
 
-        $configs = array($config_base, array('dbal' => $config_mysql));
+        $configs = [$config_base, ['dbal' => $config_mysql]];
         $loader->load($configs, $container);
 
         $arguments = $container->getDefinition('propel.configuration')->getArguments();

@@ -23,8 +23,8 @@ use Symfony\Component\Form\Guess\Guess;
 
 class PropelTypeGuesserTest extends TestCase
 {
-    const CLASS_NAME = 'Propel\Bundle\PropelBundle\Tests\Fixtures\Item';
-    const UNKNOWN_CLASS_NAME = 'Propel\Bundle\PropelBundle\Tests\Fixtures\UnknownItem';
+    public const CLASS_NAME = 'Propel\Bundle\PropelBundle\Tests\Fixtures\Item';
+    public const UNKNOWN_CLASS_NAME = 'Propel\Bundle\PropelBundle\Tests\Fixtures\UnknownItem';
 
     private $guesser;
 
@@ -123,20 +123,6 @@ class PropelTypeGuesserTest extends TestCase
 
     public static function dataProviderForGuessType()
     {
-        return array(
-            array('is_active',  CheckboxType::class, Guess::HIGH_CONFIDENCE),
-            array('enabled',    CheckboxType::class, Guess::HIGH_CONFIDENCE),
-            array('id',         IntegerType::class,  Guess::MEDIUM_CONFIDENCE),
-            array('value',      TextType::class,     Guess::MEDIUM_CONFIDENCE),
-            array('price',      NumberType::class,   Guess::MEDIUM_CONFIDENCE),
-            array('updated_at', DateTimeType::class, Guess::HIGH_CONFIDENCE),
-
-            array('isActive',   CheckboxType::class, Guess::HIGH_CONFIDENCE),
-            array('updatedAt',  DateTimeType::class, Guess::HIGH_CONFIDENCE),
-
-            array('Authors',    ModelType::class,    Guess::HIGH_CONFIDENCE,     true),
-            array('Resellers',  ModelType::class,    Guess::HIGH_CONFIDENCE,     true),
-            array('MainAuthor', ModelType::class,    Guess::HIGH_CONFIDENCE,     false),
-        );
+        return [['is_active', CheckboxType::class, Guess::HIGH_CONFIDENCE], ['enabled', CheckboxType::class, Guess::HIGH_CONFIDENCE], ['id', IntegerType::class, Guess::MEDIUM_CONFIDENCE], ['value', TextType::class, Guess::MEDIUM_CONFIDENCE], ['price', NumberType::class, Guess::MEDIUM_CONFIDENCE], ['updated_at', DateTimeType::class, Guess::HIGH_CONFIDENCE], ['isActive', CheckboxType::class, Guess::HIGH_CONFIDENCE], ['updatedAt', DateTimeType::class, Guess::HIGH_CONFIDENCE], ['Authors', ModelType::class, Guess::HIGH_CONFIDENCE, true], ['Resellers', ModelType::class, Guess::HIGH_CONFIDENCE, true], ['MainAuthor', ModelType::class, Guess::HIGH_CONFIDENCE, false]];
     }
 }

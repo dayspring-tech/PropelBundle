@@ -18,7 +18,7 @@ class PropelParamConverterTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        if (!interface_exists('Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface')) {
+        if (!interface_exists(\Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface::class)) {
             $this->markTestSkipped('SensioFrameworkExtraBundle is not available.');
         }
 
@@ -37,23 +37,23 @@ class PropelParamConverterTest extends TestCase
     {
         $paramConverter = new PropelParamConverter();
 
-        $configuration = new ParamConverter(array('class' => 'Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book'));
+        $configuration = new ParamConverter(['class' => \Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class]);
         $this->assertTrue($paramConverter->supports($configuration), 'param converter should support propel class');
 
-        $configuration = new ParamConverter(array('class' =>'fakeClass'));
+        $configuration = new ParamConverter(['class' =>'fakeClass']);
         $this->assertFalse($paramConverter->supports($configuration), 'param converter should not support wrong class');
 
-        $configuration = new ParamConverter(array('class' =>'Propel\Bundle\PropelBundle\Tests\TestCase'));
+        $configuration = new ParamConverter(['class' =>\Propel\Bundle\PropelBundle\Tests\TestCase::class]);
         $this->assertFalse($paramConverter->supports($configuration), 'param converter should not support wrong class');
     }
 
     public function testParamConverterFindPk()
     {
         $paramConverter = new PropelParamConverter();
-        $request = new Request(array(), array(), array('id' => 1, 'book' => null));
-        $configuration = new ParamConverter(array('class' => 'Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book', 'name' => 'book'));
+        $request = new Request([], [], ['id' => 1, 'book' => null]);
+        $configuration = new ParamConverter(['class' => \Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class, 'name' => 'book']);
         $paramConverter->apply($request, $configuration);
-        $this->assertInstanceOf('Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book',$request->attributes->get('book'),
+        $this->assertInstanceOf(\Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class,$request->attributes->get('book'),
             'param "book" should be an instance of "Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book"');
     }
 
@@ -61,29 +61,29 @@ class PropelParamConverterTest extends TestCase
     {
         $this->expectException(NotFoundHttpException::class);
         $paramConverter = new PropelParamConverter();
-        $request = new Request(array(), array(), array('id' => 2, 'book' => null));
-        $configuration = new ParamConverter(array('class' => 'Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book', 'name' => 'book'));
+        $request = new Request([], [], ['id' => 2, 'book' => null]);
+        $configuration = new ParamConverter(['class' => \Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class, 'name' => 'book']);
         $paramConverter->apply($request, $configuration);
     }
 
     public function testParamConverterFindSlug()
     {
         $paramConverter = new PropelParamConverter();
-        $request = new Request(array(), array(), array('slug' => 'my-book', 'book' => null));
-        $configuration = new ParamConverter(array('class' => 'Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book', 'name' => 'book'));
+        $request = new Request([], [], ['slug' => 'my-book', 'book' => null]);
+        $configuration = new ParamConverter(['class' => \Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class, 'name' => 'book']);
         $paramConverter->apply($request, $configuration);
-        $this->assertInstanceOf('Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book',$request->attributes->get('book'),
+        $this->assertInstanceOf(\Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class,$request->attributes->get('book'),
             'param "book" should be an instance of "Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book"');
     }
 
     public function testParamConverterFindCamelCasedSlug()
     {
         $paramConverter = new PropelParamConverter();
-        $request = new Request(array(), array(), array('author_slug' => 'my-author', 'slug' => 'my-kewl-book', 'book' => null));
-        $configuration = new ParamConverter(array('class' => 'Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book', 'name' => 'book'));
+        $request = new Request([], [], ['author_slug' => 'my-author', 'slug' => 'my-kewl-book', 'book' => null]);
+        $configuration = new ParamConverter(['class' => \Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class, 'name' => 'book']);
 
         $paramConverter->apply($request, $configuration);
-        $this->assertInstanceOf('Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book',$request->attributes->get('book'),
+        $this->assertInstanceOf(\Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class,$request->attributes->get('book'),
             'param "book" should be an instance of "Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book"');
     }
 
@@ -91,20 +91,18 @@ class PropelParamConverterTest extends TestCase
     {
         $this->expectException(NotFoundHttpException::class);
         $paramConverter = new PropelParamConverter();
-        $request = new Request(array(), array(), array('slug' => 'my-foo', 'book' => null));
-        $configuration = new ParamConverter(array('class' => 'Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book', 'name' => 'book'));
+        $request = new Request([], [], ['slug' => 'my-foo', 'book' => null]);
+        $configuration = new ParamConverter(['class' => \Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class, 'name' => 'book']);
         $paramConverter->apply($request, $configuration);
     }
 
     public function testParamConverterFindBySlugNotByName()
     {
         $paramConverter = new PropelParamConverter();
-        $request = new Request(array(), array(), array('slug' => 'my-book', 'name' => 'foo', 'book' => null));
-        $configuration = new ParamConverter(array(
-            'class' => 'Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book', 'name' => 'book',
-            'options' => array('exclude' => array('name'))));
+        $request = new Request([], [], ['slug' => 'my-book', 'name' => 'foo', 'book' => null]);
+        $configuration = new ParamConverter(['class' => \Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class, 'name' => 'book', 'options' => ['exclude' => ['name']]]);
         $paramConverter->apply($request, $configuration);
-        $this->assertInstanceOf('Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book',$request->attributes->get('book'),
+        $this->assertInstanceOf(\Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class,$request->attributes->get('book'),
             'param "book" should be an instance of "Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book"');
     }
 
@@ -112,12 +110,10 @@ class PropelParamConverterTest extends TestCase
     {
         $this->expectException(LogicException::class);
         $paramConverter = new PropelParamConverter();
-        $request = new Request(array(), array(), array('slug' => 'my-book', 'name' => 'foo', 'book' => null));
-        $configuration = new ParamConverter(array(
-            'class' => 'Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book', 'name' => 'book',
-            'options' => array('exclude' => array('name', 'slug'))));
+        $request = new Request([], [], ['slug' => 'my-book', 'name' => 'foo', 'book' => null]);
+        $configuration = new ParamConverter(['class' => \Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class, 'name' => 'book', 'options' => ['exclude' => ['name', 'slug']]]);
         $paramConverter->apply($request, $configuration);
-        $this->assertInstanceOf('Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book',$request->attributes->get('book'),
+        $this->assertInstanceOf(\Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class,$request->attributes->get('book'),
             'param "book" should be an instance of "Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book"');
     }
 
@@ -125,12 +121,10 @@ class PropelParamConverterTest extends TestCase
     {
         $this->expectException(LogicException::class);
         $paramConverter = new PropelParamConverter();
-        $request = new Request(array(), array(), array('id' => '1234', 'book' => null));
-        $configuration = new ParamConverter(array(
-            'class' => 'Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book', 'name' => 'book',
-            'options' => array('exclude' => array('id'))));
+        $request = new Request([], [], ['id' => '1234', 'book' => null]);
+        $configuration = new ParamConverter(['class' => \Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class, 'name' => 'book', 'options' => ['exclude' => ['id']]]);
         $paramConverter->apply($request, $configuration);
-        $this->assertInstanceOf('Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book',$request->attributes->get('book'),
+        $this->assertInstanceOf(\Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class,$request->attributes->get('book'),
             'param "book" should be an instance of "Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book"');
     }
 
@@ -138,16 +132,16 @@ class PropelParamConverterTest extends TestCase
     {
         $this->expectException(LogicException::class);
         $paramConverter = new PropelParamConverter();
-        $request = new Request(array(), array(), array('book' => null));
-        $configuration = new ParamConverter(array('class' => 'Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book', 'name' => 'book'));
+        $request = new Request([], [], ['book' => null]);
+        $configuration = new ParamConverter(['class' => \Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class, 'name' => 'book']);
         $paramConverter->apply($request, $configuration);
     }
 
     public function testParamConverterFindWithOptionalParam()
     {
         $paramConverter = new PropelParamConverter();
-        $request = new Request(array(), array(), array('book' => null));
-        $configuration = new ParamConverter(array('class' => 'Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book', 'name' => 'book'));
+        $request = new Request([], [], ['book' => null]);
+        $configuration = new ParamConverter(['class' => \Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class, 'name' => 'book']);
         $configuration->setIsOptional(true);
         $paramConverter->apply($request, $configuration);
 
@@ -158,26 +152,20 @@ class PropelParamConverterTest extends TestCase
     public function testParamConverterFindWithMapping()
     {
         $paramConverter = new PropelParamConverter();
-        $request = new Request(array(), array(), array('toto' => 1, 'book' => null));
-        $configuration = new ParamConverter(array('class' => 'Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book',
-            'name' => 'book',
-            'options' => array('mapping' => array('toto' => 'id'))
-        ));
+        $request = new Request([], [], ['toto' => 1, 'book' => null]);
+        $configuration = new ParamConverter(['class' => \Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class, 'name' => 'book', 'options' => ['mapping' => ['toto' => 'id']]]);
         $paramConverter->apply($request, $configuration);
-        $this->assertInstanceOf('Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book',$request->attributes->get('book'),
+        $this->assertInstanceOf(\Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class,$request->attributes->get('book'),
             'param "book" should be an instance of "Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book"');
     }
 
     public function testParamConverterFindSlugWithMapping()
     {
         $paramConverter = new PropelParamConverter();
-        $request = new Request(array(), array(), array('slugParam_special' => 'my-book', 'book' => null));
-        $configuration = new ParamConverter(array('class' => 'Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book',
-            'name' => 'book',
-            'options' => array('mapping' => array('slugParam_special' => 'slug'))
-        ));
+        $request = new Request([], [], ['slugParam_special' => 'my-book', 'book' => null]);
+        $configuration = new ParamConverter(['class' => \Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class, 'name' => 'book', 'options' => ['mapping' => ['slugParam_special' => 'slug']]]);
         $paramConverter->apply($request, $configuration);
-        $this->assertInstanceOf('Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book',$request->attributes->get('book'),
+        $this->assertInstanceOf(\Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class,$request->attributes->get('book'),
             'param "book" should be an instance of "Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book"');
     }
 
@@ -186,14 +174,8 @@ class PropelParamConverterTest extends TestCase
         $this->loadFixtures();
 
         $paramConverter = new PropelParamConverter();
-        $request = new Request(array(), array(), array('id' => 1, 'book' => null));
-        $configuration = new ParamConverter(array(
-            'class' => 'Propel\Bundle\PropelBundle\Tests\Request\ParamConverter\MyBook',
-            'name' => 'book',
-            'options' => array(
-                'with' => 'MyAuthor'
-            )
-        ));
+        $request = new Request([], [], ['id' => 1, 'book' => null]);
+        $configuration = new ParamConverter(['class' => 'Propel\Bundle\PropelBundle\Tests\Request\ParamConverter\MyBook', 'name' => 'book', 'options' => ['with' => 'MyAuthor']]);
 
         $nb = $this->con->getQueryCount();
         $paramConverter->apply($request, $configuration);
@@ -216,15 +198,8 @@ class PropelParamConverterTest extends TestCase
         $this->loadFixtures();
 
         $paramConverter = new PropelParamConverter();
-        $request = new Request(array(), array(), array('param1' => 10, 'author' => null));
-        $configuration = new ParamConverter(array(
-            'class' => 'Propel\Bundle\PropelBundle\Tests\Request\ParamConverter\MyAuthor',
-            'name' => 'author',
-            'options' => array(
-                'with'      => array(array('MyBook', 'left join')),
-                'mapping'   => array('param1' => 'id'),
-            )
-        ));
+        $request = new Request([], [], ['param1' => 10, 'author' => null]);
+        $configuration = new ParamConverter(['class' => 'Propel\Bundle\PropelBundle\Tests\Request\ParamConverter\MyAuthor', 'name' => 'author', 'options' => ['with'      => [['MyBook', 'left join']], 'mapping'   => ['param1' => 'id']]]);
 
         $nb = $this->con->getQueryCount();
         $paramConverter->apply($request, $configuration);
@@ -247,14 +222,8 @@ class PropelParamConverterTest extends TestCase
         $this->loadFixtures();
 
         $paramConverter = new PropelParamConverter();
-        $request = new Request(array(), array(), array('id' => 10, 'author' => null));
-        $configuration = new ParamConverter(array(
-                'class' => 'Propel\Bundle\PropelBundle\Tests\Request\ParamConverter\MyAuthor',
-                'name' => 'author',
-                'options' => array(
-                        'with'      => array(array('MyBook', 'left join')),
-                )
-        ));
+        $request = new Request([], [], ['id' => 10, 'author' => null]);
+        $configuration = new ParamConverter(['class' => 'Propel\Bundle\PropelBundle\Tests\Request\ParamConverter\MyAuthor', 'name' => 'author', 'options' => ['with'      => [['MyBook', 'left join']]]]);
 
         $nb = $this->con->getQueryCount();
         $paramConverter->apply($request, $configuration);
@@ -275,17 +244,9 @@ class PropelParamConverterTest extends TestCase
     public function testConfigurationReadFromRouteOptionsIfEmpty()
     {
         $routes = new RouteCollection();
-        $routes->add('test_route', new Route('/test/{authorId}', array(), array(), array(
-            'propel_converter' => array(
-                'author' => array(
-                    'mapping' => array(
-                        'authorId' => 'id',
-                    ),
-                ),
-            ),
-        )));
+        $routes->add('test_route', new Route('/test/{authorId}', [], [], ['propel_converter' => ['author' => ['mapping' => ['authorId' => 'id']]]]));
 
-        $router = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Routing\Router')
+        $router = $this->getMockBuilder(\Symfony\Bundle\FrameworkBundle\Routing\Router::class)
             ->disableOriginalConstructor()
             ->getMock();
         $router
@@ -298,17 +259,9 @@ class PropelParamConverterTest extends TestCase
         $paramConverter->setRouter($router);
 
         $request = new Request();
-        $request->attributes->add(array(
-            '_route' => 'test_route',
-            'id' => 10,
-            'author' => null,
-        ));
+        $request->attributes->add(['_route' => 'test_route', 'id' => 10, 'author' => null]);
 
-        $configuration = new ParamConverter(array(
-            'class' => 'Propel\Bundle\PropelBundle\Tests\Request\ParamConverter\MyAuthor',
-            'name' => 'author',
-            'options' => array(),
-        ));
+        $configuration = new ParamConverter(['class' => 'Propel\Bundle\PropelBundle\Tests\Request\ParamConverter\MyAuthor', 'name' => 'author', 'options' => []]);
 
         $paramConverter->apply($request, $configuration);
 
@@ -344,7 +297,7 @@ XML;
         $builder->setSchema($schema);
 
         if (class_exists('Propel\Bundle\PropelBundle\Tests\Request\ParamConverter\MyAuthor')) {
-            $builder->setClassTargets(array());
+            $builder->setClassTargets([]);
         }
 
         $this->con = $builder->build();

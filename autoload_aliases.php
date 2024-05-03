@@ -1,8 +1,8 @@
 <?php
 
 function autoload_propel_aliases($className) {
-    if (0 === strpos($className, 'Propel\PropelBundle')) {
-        class_alias(str_replace('Propel\PropelBundle', 'Propel\Bundle\PropelBundle', $className), $className);
+    if (str_starts_with((string) $className, 'Propel\PropelBundle')) {
+        class_alias(str_replace('Propel\PropelBundle', 'Propel\Bundle\PropelBundle', (string) $className), $className);
     }
 }
 

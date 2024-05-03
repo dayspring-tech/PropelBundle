@@ -27,10 +27,7 @@ class MigrationMigrateCommand extends AbstractCommand
     {
         $this
             ->setDescription('Executes the next migrations up')
-            ->setDefinition(array(
-                new InputOption('--up', '', InputOption::VALUE_NONE, 'Executes the next migration up'),
-                new InputOption('--down', '', InputOption::VALUE_NONE, 'Executes the next migration down'),
-            ))
+            ->setDefinition([new InputOption('--up', '', InputOption::VALUE_NONE, 'Executes the next migration up'), new InputOption('--down', '', InputOption::VALUE_NONE, 'Executes the next migration down')])
             ->setHelp(<<<EOT
 The <info>propel:migration:migrate</info> command checks the version of the database structure, looks for migrations files not yet executed (i.e. with a greater version timestamp), and executes them.
 
@@ -54,7 +51,7 @@ EOT
      *
      * @throws \InvalidArgumentException When the target directory does not exist
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if ($input->getOption('down')) {
             $ret=$this->callPhing('migration-down');

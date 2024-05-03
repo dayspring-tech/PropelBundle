@@ -44,7 +44,7 @@ class TranslationCollectionType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return CollectionType::class;
     }
@@ -56,12 +56,8 @@ class TranslationCollectionType extends AbstractType
     {
         parent::configureOptions($resolver);
 
-        $resolver->setRequired(array(
-            'languages',
-        ));
+        $resolver->setRequired(['languages']);
 
-        $resolver->setDefaults(array(
-            'entry_type' => TranslationType::class,
-        ));
+        $resolver->setDefaults(['entry_type' => TranslationType::class]);
     }
 }

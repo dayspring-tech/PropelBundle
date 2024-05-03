@@ -34,7 +34,7 @@ class UniqueObject extends Constraint
     /**
      * @var array
      */
-    public $fields = array();
+    public $fields = [];
 
     /**
      * @var string Used to set the path where the error will be attached, default is global.
@@ -61,15 +61,15 @@ class UniqueObject extends Constraint
     /**
      * {@inheritDoc}
      */
-    public function getRequiredOptions()
+    public function getRequiredOptions(): array
     {
-        return array('fields');
+        return ['fields'];
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getTargets()
+    public function getTargets(): string|array
     {
         return self::CLASS_CONSTRAINT;
     }

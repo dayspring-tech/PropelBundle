@@ -50,7 +50,7 @@ EOT
      *
      * @throws \InvalidArgumentException When the target directory does not exist
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if ($input->getOption('force')) {
             $connections = $this->getConnections();
@@ -61,7 +61,7 @@ EOT
             $manager->setConnections($connections);
 
             if ($input->getOption('connection')) {
-                list($name, $config) = $this->getConnection($input, $output);
+                [$name, $config] = $this->getConnection($input, $output);
                 $this->doSqlInsert($manager, $output, $name);
             } else {
                 foreach ($connections as $name => $config) {
@@ -83,8 +83,6 @@ EOT
     }
 
     /**
-     * @param \PropelSqlManager $manager
-     * @param OutputInterface   $output
      * @param string            $connectionName
      */
     protected function doSqlInsert(\PropelSqlManager $manager, OutputInterface $output, $connectionName)
@@ -94,7 +92,7 @@ EOT
         } catch (\Exception $e) {
             return $this->writeSection(
                 $output,
-                array('[Propel] Exception', '', $e),
+                ['[Propel] Exception', '', $e],
                 'fg=white;bg=red'
             );
         }
@@ -113,7 +111,7 @@ EOT
     {
         $propelConfiguration = $this->getContainer()->get('propel.configuration');
 
-        $connections = array();
+        $connections = [];
         foreach ($propelConfiguration['datasources'] as $name => $config) {
             if (is_scalar($config)) {
                 continue;

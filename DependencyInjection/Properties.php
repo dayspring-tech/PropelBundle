@@ -17,20 +17,17 @@ namespace Propel\Bundle\PropelBundle\DependencyInjection;
 class Properties
 {
     /**
-     * Build properties.
-     *
-     * @var array
-     */
-    private $properties;
-
-    /**
      * Default constructor.
      *
      * @param $properties   An array of properties.
      */
-    public function __construct(array $properties = array())
+    public function __construct(
+        /**
+         * Build properties.
+         */
+        private readonly array $properties = []
+    )
     {
-        $this->properties = $properties;
     }
 
     /**

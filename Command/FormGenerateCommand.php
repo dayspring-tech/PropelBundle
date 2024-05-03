@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
  */
 class FormGenerateCommand extends GeneratorAwareCommand
 {
-    const DEFAULT_FORM_TYPE_DIRECTORY = '/Form/Type';
+    public const DEFAULT_FORM_TYPE_DIRECTORY = '/Form/Type';
 
     /**
      * @see Command
@@ -51,7 +51,7 @@ EOT
      *
      * @throws \InvalidArgumentException When the target directory does not exist
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if ($schemas = $this->getSchemasFromBundle($this->bundle)) {
             $schemas = $this->getFinalSchemas($this->getContainer()->get('kernel'));
@@ -123,6 +123,6 @@ EOT
             }
         }
 
-        return str_replace('##BUILD_CODE##', $buildCode, $formTypeContent);
+        return str_replace('##BUILD_CODE##', $buildCode, (string) $formTypeContent);
     }
 }

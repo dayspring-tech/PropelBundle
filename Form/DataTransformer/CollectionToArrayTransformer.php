@@ -26,7 +26,7 @@ class CollectionToArrayTransformer implements DataTransformerInterface
     public function transform($collection)
     {
         if (null === $collection) {
-            return array();
+            return [];
         }
 
         if (!$collection instanceof PropelObjectCollection) {

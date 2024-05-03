@@ -32,13 +32,13 @@ abstract class AbstractCommand extends Command
      * Additional Phing args to add in specialized commands.
      * @var array
      */
-    protected $additionalPhingArgs = array();
+    protected $additionalPhingArgs = [];
 
     /**
      * Temporary XML schemas used on command execution.
      * @var array
      */
-    protected $tempSchemas = array();
+    protected $tempSchemas = [];
 
     /**
      * @var string
@@ -67,12 +67,8 @@ abstract class AbstractCommand extends Command
      */
     protected $input;
 
-    private ContainerInterface $container;
-
-    public function __construct(ContainerInterface $container, $name = null)
+    public function __construct(private readonly ContainerInterface $container, $name = null)
     {
-        $this->container = $container;
-
         parent::__construct($name);
     }
 
@@ -84,9 +80,7 @@ abstract class AbstractCommand extends Command
     /**
      * Return the package for a given bundle.
      *
-     * @param Bundle $bundle
      * @param string $baseDirectory The base directory to exclude from prefix.
-     *
      * @return string
      */
     protected function getPackage(Bundle $bundle, $namespace = '', $baseDirectory = '')
@@ -104,12 +98,12 @@ abstract class AbstractCommand extends Command
                 DIRECTORY_SEPARATOR,
                 array_merge(
                     array_slice($path, 0, $length),
-                    explode('\\', $namespace)
+                    explode('\\', (string) $namespace)
                 )
             );
         } else {
             // PSR-4
-            $ns = explode('\\', $namespace);
+            $ns = explode('\\', (string) $namespace);
 
             $diff = array_diff($ns, $bundle_namespace);
 
@@ -145,7 +139,7 @@ abstract class AbstractCommand extends Command
 
         if ($input->hasArgument('bundle') && $input->getArgument('bundle')) {
             $bundleName = $input->getArgument('bundle');
-            if (0 === strpos($bundleName, '@')) {
+            if (str_starts_with($bundleName, '@')) {
                 $bundleName = substr($bundleName, 1);
             }
 
@@ -159,7 +153,7 @@ abstract class AbstractCommand extends Command
      * @param string $taskName   A Propel task name.
      * @param array  $properties An array of properties to pass to Phing.
      */
-    protected function callPhing($taskName, $properties = array())
+    protected function callPhing($taskName, $properties = [])
     {
         $kernel = $this->getApplication()->getKernel();
 
@@ -189,7 +183,7 @@ abstract class AbstractCommand extends Command
 
         // Add any arbitrary arguments last
         foreach ($this->additionalPhingArgs as $arg) {
-            if (in_array($arg, array('verbose', 'debug'))) {
+            if (in_array($arg, ['verbose', 'debug'])) {
                 $bufferPhingOutput = false;
             }
 
@@ -221,7 +215,7 @@ abstract class AbstractCommand extends Command
                 strstr($this->buffer, 'failed for the following reason:')) {
                 $returnStatus = false;
             }
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $returnStatus = false;
         }
 
@@ -249,14 +243,10 @@ abstract class AbstractCommand extends Command
 
         $finalSchemas = $this->getFinalSchemas($kernel, $this->bundle);
         foreach ($finalSchemas as $schema) {
-            list($bundle, $finalSchema) = $schema;
+            [$bundle, $finalSchema] = $schema;
 
             $tempSchema = $bundle->getName().'-'.$finalSchema->getBaseName();
-            $this->tempSchemas[$tempSchema] = array(
-                'bundle'    => $bundle->getName(),
-                'basename'  => $finalSchema->getBaseName(),
-                'path'      => $finalSchema->getPathname(),
-            );
+            $this->tempSchemas[$tempSchema] = ['bundle'    => $bundle->getName(), 'basename'  => $finalSchema->getBaseName(), 'path'      => $finalSchema->getPathname()];
 
             $file = $cacheDir.DIRECTORY_SEPARATOR.$tempSchema;
             $filesystem->copy((string) $finalSchema, $file, true);
@@ -304,7 +294,6 @@ abstract class AbstractCommand extends Command
     /**
      * Return a list of final schema files that will be processed.
      *
-     * @param \Symfony\Component\HttpKernel\KernelInterface $kernel
      *
      * @return array
      */
@@ -314,7 +303,7 @@ abstract class AbstractCommand extends Command
             return $this->getSchemasFromBundle($bundle);
         }
 
-        $finalSchemas = array();
+        $finalSchemas = [];
         foreach ($kernel->getBundles() as $bundle) {
             $finalSchemas = array_merge($finalSchemas, $this->getSchemasFromBundle($bundle));
         }
@@ -323,13 +312,11 @@ abstract class AbstractCommand extends Command
     }
 
     /**
-     * @param \Symfony\Component\HttpKernel\Bundle\BundleInterface $bundle
-     *
      * @return array
      */
     protected function getSchemasFromBundle(BundleInterface $bundle)
     {
-        $finalSchemas = array();
+        $finalSchemas = [];
 
         if (is_dir($dir = $bundle->getPath().'/Resources/config')) {
             $finder  = new Finder();
@@ -340,7 +327,7 @@ abstract class AbstractCommand extends Command
                     $logicalName = $this->transformToLogicalName($schema, $bundle);
                     $finalSchema = new \SplFileInfo($this->getFileLocator()->locate($logicalName));
 
-                    $finalSchemas[(string) $finalSchema] = array($bundle, $finalSchema);
+                    $finalSchemas[(string) $finalSchema] = [$bundle, $finalSchema];
                 }
             }
         }
@@ -349,7 +336,6 @@ abstract class AbstractCommand extends Command
     }
 
     /**
-     * @param  \SplFileInfo $file
      * @return string
      */
     protected function getRelativeFileName(\SplFileInfo $file)
@@ -395,7 +381,7 @@ abstract class AbstractCommand extends Command
     <datasources default="%default_connection%">
 
 EOT
-        , array('%default_connection%' => $container->getParameter('propel.dbal.default_connection')));
+        , ['%default_connection%' => $container->getParameter('propel.dbal.default_connection')]);
 
         $propelConfiguration = $container->get('propel.configuration');
         foreach ($propelConfiguration['datasources'] as $name => $datasource) {
@@ -415,14 +401,7 @@ EOT
       </datasource>
 
 EOT
-            , array(
-                '%name%'     => $name,
-                '%adapter%'  => $datasource['adapter'],
-                '%classname%'=> $datasource['connection']['classname'],
-                '%dsn%'      => $datasource['connection']['dsn'],
-                '%username%' => $datasource['connection']['user'],
-                '%password%' => isset($datasource['connection']['password']) ? $datasource['connection']['password'] : '',
-            ));
+            , ['%name%'     => $name, '%adapter%'  => $datasource['adapter'], '%classname%'=> $datasource['connection']['classname'], '%dsn%'      => $datasource['connection']['dsn'], '%username%' => $datasource['connection']['user'], '%password%' => $datasource['connection']['password'] ?? '']);
         }
 
         $xml .= <<<EOT
@@ -442,7 +421,7 @@ EOT;
      */
     protected function getProperties($file)
     {
-        $properties = array();
+        $properties = [];
 
         if (false === $lines = @file($file)) {
             throw new \Exception(sprintf('Unable to parse contents of "%s".', $file));
@@ -451,7 +430,7 @@ EOT;
         foreach ($lines as $line) {
             $line = trim($line);
 
-            if ('' == $line || in_array($line[0], array('#', ';'))) {
+            if ('' == $line || in_array($line[0], ['#', ';'])) {
                 continue;
             }
 
@@ -493,8 +472,6 @@ EOT;
      * Returns the default connection if no option specified or an exception
      * if the specified connection doesn't exist.
      *
-     * @param InputInterface  $input
-     * @param OutputInterface $output
      * @throw \InvalidArgumentException If the connection does not exist.
      * @return array
      */
@@ -521,7 +498,7 @@ EOT;
             $defaultConfig['connection']['password'] = null;
         }
 
-        return array($name, $defaultConfig);
+        return [$name, $defaultConfig];
     }
 
     /**
@@ -534,12 +511,8 @@ EOT;
     {
         preg_match('#dbname=([a-zA-Z0-9\_]+)#', $dsn, $matches);
 
-        if (isset($matches[1])) {
-            return $matches[1];
-        }
-
         // e.g. SQLite
-        return null;
+        return $matches[1] ?? null;
     }
 
     /**
@@ -562,8 +535,8 @@ EOT;
      */
     protected function writeSummary(OutputInterface $output, $taskname)
     {
-        foreach (explode("\n", $this->buffer) as $line) {
-            if (false !== strpos($line, '[' . $taskname . ']')) {
+        foreach (explode("\n", (string) $this->buffer) as $line) {
+            if (str_contains($line, '[' . $taskname . ']')) {
                 $arr  = preg_split('#\[' . $taskname . '\] #', $line);
                 $info = $arr[1];
 
@@ -586,11 +559,7 @@ EOT;
      */
     protected function writeSection(OutputInterface $output, $text, $style = 'bg=blue;fg=white')
     {
-        $output->writeln(array(
-            '',
-            $this->getHelperSet()->get('formatter')->formatBlock($text, $style, true),
-            '',
-        ));
+        $output->writeln(['', $this->getHelperSet()->get('formatter')->formatBlock($text, $style, true), '']);
     }
 
     /**
@@ -604,11 +573,7 @@ EOT;
     {
         $moreText = $more ? ' To get more details, run the command with the "--verbose" option.' : '';
 
-        return $this->writeSection($output, array(
-            '[Propel] Error',
-            '',
-            'An error has occured during the "' . $taskName . '" task process.' . $moreText
-        ), 'fg=white;bg=red');
+        return $this->writeSection($output, ['[Propel] Error', '', 'An error has occured during the "' . $taskName . '" task process.' . $moreText], 'fg=white;bg=red');
     }
 
     /**
@@ -642,8 +607,6 @@ EOT;
     }
 
     /**
-     * @param  \SplFileInfo    $schema
-     * @param  BundleInterface $bundle
      * @return string
      */
     protected function transformToLogicalName(\SplFileInfo $schema, BundleInterface $bundle)
@@ -663,23 +626,10 @@ EOT;
      */
     private function getPhingArguments(KernelInterface $kernel, $workingDirectory, $properties)
     {
-        $args = array();
+        $args = [];
 
         // Default properties
-        $properties = array_merge(array(
-            'propel.database'           => 'mysql',
-            'project.dir'               => $workingDirectory,
-            'propel.output.dir'         => $kernel->getProjectDir().'/app/propel',
-            'propel.php.dir'            => $kernel->getProjectDir(),
-            'propel.packageObjectModel' => true,
-            'propel.useDateTimeClass'   => true,
-            'propel.dateTimeClass'      => 'DateTime',
-            'propel.defaultTimeFormat'  => '',
-            'propel.defaultDateFormat'  => '',
-            'propel.addClassLevelComment'       => false,
-            'propel.defaultTimeStampFormat'     => '',
-            'propel.builder.pluralizer.class'   => 'builder.util.StandardEnglishPluralizer',
-        ), $properties);
+        $properties = array_merge(['propel.database'           => 'mysql', 'project.dir'               => $workingDirectory, 'propel.output.dir'         => $kernel->getProjectDir().'/app/propel', 'propel.php.dir'            => $kernel->getProjectDir(), 'propel.packageObjectModel' => true, 'propel.useDateTimeClass'   => true, 'propel.dateTimeClass'      => 'DateTime', 'propel.defaultTimeFormat'  => '', 'propel.defaultDateFormat'  => '', 'propel.addClassLevelComment'       => false, 'propel.defaultTimeStampFormat'     => '', 'propel.builder.pluralizer.class'   => 'builder.util.StandardEnglishPluralizer'], $properties);
 
         // Adding user defined properties from the configuration
         $properties = array_merge(
