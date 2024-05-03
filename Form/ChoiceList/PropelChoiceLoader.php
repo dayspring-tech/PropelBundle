@@ -69,7 +69,7 @@ class PropelChoiceLoader implements ChoiceLoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function loadChoiceList($value = null)
+    public function loadChoiceList($value = null): ChoiceListInterface
     {
         if ($this->choiceList) {
             return $this->choiceList;
@@ -83,7 +83,7 @@ class PropelChoiceLoader implements ChoiceLoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function loadChoicesForValues(array $values, $value = null)
+    public function loadChoicesForValues(array $values, $value = null): array
     {
         // Performance optimization
         if (empty($values)) {
@@ -120,7 +120,7 @@ class PropelChoiceLoader implements ChoiceLoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function loadValuesForChoices(array $choices, $value = null)
+    public function loadValuesForChoices(array $choices, $value = null): array
     {
         // Performance optimization
         if (empty($choices)) {

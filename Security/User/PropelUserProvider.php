@@ -12,7 +12,6 @@
 namespace Propel\Bundle\PropelBundle\Security\User;
 
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
@@ -50,7 +49,7 @@ class PropelUserProvider implements UserProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function loadUserByIdentifier($username)
+    public function loadUserByIdentifier(string $username): UserInterface
     {
         $queryClass = $this->queryClass;
         $query = $queryClass::create();
@@ -63,7 +62,11 @@ class PropelUserProvider implements UserProviderInterface
         }
 
         if (null === $user = $query->findOne()) {
-            throw new UsernameNotFoundException(sprintf('User "%s" not found.', $username));
+            if (class_exists('Symfony\Component\Security\Core\Exception\UsernameNotFoundException')) {
+                throw new \Symfony\Component\Security\Core\Exception\UsernameNotFoundException(sprintf('User "%s" not found.', $username));
+            } else {
+                throw new \Symfony\Component\Security\Core\Exception\UserNotFoundException(sprintf('User "%s" not found.', $username));
+            }
         }
 
         return $user;

@@ -83,7 +83,7 @@ class ModelTranslation implements DumperInterface, LoaderInterface, ResourceInte
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $locale, $domain = 'messages')
+    public function load($resource, $locale, $domain = 'messages'): MessageCatalogue
     {
         // The loader only accepts itself as a resource.
         if ($resource !== $this) {

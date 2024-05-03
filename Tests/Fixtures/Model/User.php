@@ -10,4 +10,15 @@ class User extends BaseUser implements UserInterface
     public function eraseCredentials()
     {
     }
+
+    public function getRoles(): array
+    {
+        return parent::getRoles();
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return parent::getUsername();
+    }
+
 }
