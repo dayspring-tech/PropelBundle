@@ -24,6 +24,13 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 class PropelDataCollector extends DataCollector
 {
     /**
+     * Propel logger.
+     *
+     * @var PropelLogger
+     */
+    private $logger;
+
+    /**
      * Propel configuration.
      *
      * @var \PropelConfiguration
@@ -36,11 +43,9 @@ class PropelDataCollector extends DataCollector
      * @param PropelLogger         $logger              A Propel logger.
      * @param \PropelConfiguration $propelConfiguration The Propel configuration object.
      */
-    public function __construct(/**
-     * Propel logger.
-     */
-    private readonly PropelLogger $logger, \PropelConfiguration $propelConfiguration)
+    public function __construct(PropelLogger $logger, \PropelConfiguration $propelConfiguration)
     {
+        $this->logger = $logger;
         $this->propelConfiguration = $propelConfiguration;
     }
 

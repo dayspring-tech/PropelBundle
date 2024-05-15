@@ -67,8 +67,12 @@ abstract class AbstractCommand extends Command
      */
     protected $input;
 
-    public function __construct(private readonly ContainerInterface $container, $name = null)
+    private ContainerInterface $container;
+
+    public function __construct(ContainerInterface $container, $name = null)
     {
+        $this->container = $container;
+
         parent::__construct($name);
     }
 
