@@ -68,6 +68,12 @@ abstract class AbstractCommand extends Command
      */
     protected $input;
 
+    /**
+     *
+     * @var OutputInterface
+     */
+    protected $output;
+
     private ContainerInterface $container;
 
     public function __construct(ContainerInterface $container, $name = null)
@@ -141,6 +147,7 @@ abstract class AbstractCommand extends Command
         }
 
         $this->input = $input;
+        $this->output = $output;
 
         $this->checkConfiguration();
 
