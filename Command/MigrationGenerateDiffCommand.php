@@ -41,12 +41,15 @@ EOT
     /**
      * @see Command
      *
+     * @return int 0 if everything went fine, or an exit code
+     *
      * @throws \InvalidArgumentException When the target directory does not exist
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if (true === $this->callPhing('diff')) {
             $this->writeSummary($output, 'propel-sql-diff');
+            return 0;
         } elseif ( strpos( $this->buffer, 'Uncommitted migrations have been found' ) ) {
             $this->writeSection($output, array(
                 '[Propel] Error',
