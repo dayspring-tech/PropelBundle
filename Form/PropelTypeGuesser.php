@@ -143,15 +143,10 @@ class PropelTypeGuesser implements FormTypeGuesserInterface
     public function guessPattern($class, $property): ?\Symfony\Component\Form\Guess\ValueGuess
     {
         if ($column = $this->getColumn($class, $property)) {
-            switch ($column->getType()) {
-                case \PropelColumnTypes::FLOAT:
-                case \PropelColumnTypes::REAL:
-                case \PropelColumnTypes::DOUBLE:
-                case \PropelColumnTypes::DECIMAL:
-                    return new ValueGuess(null, Guess::MEDIUM_CONFIDENCE);
-                default:
-                    return null;
-            }
+            return match ($column->getType()) {
+                \PropelColumnTypes::FLOAT, \PropelColumnTypes::REAL, \PropelColumnTypes::DOUBLE, \PropelColumnTypes::DECIMAL => new ValueGuess(null, Guess::MEDIUM_CONFIDENCE),
+                default => null,
+            };
         }
     }
 

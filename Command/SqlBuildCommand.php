@@ -21,6 +21,7 @@ use Symfony\Component\Finder\Finder;
  * @author Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author William DURAND <william.durand1@gmail.com>
  */
+#[\Symfony\Component\Console\Attribute\AsCommand(name: 'propel:sql:build', description: 'Build the SQL generation code for all tables based on Propel XML schemas')]
 class SqlBuildCommand extends AbstractCommand
 {
     /**
@@ -29,7 +30,6 @@ class SqlBuildCommand extends AbstractCommand
     protected function configure()
     {
         $this
-            ->setDescription('Build the SQL generation code for all tables based on Propel XML schemas')
             ->setHelp(<<<EOT
 The <info>%command.name%</info> command builds the SQL table generation code based on the XML schemas defined in all Bundles.
 
@@ -37,7 +37,6 @@ The <info>%command.name%</info> command builds the SQL table generation code bas
 EOT
             )
             ->addOption('connection', null, InputOption::VALUE_OPTIONAL, 'Set this parameter to define a connection to use')
-            ->setName('propel:sql:build')
         ;
     }
 

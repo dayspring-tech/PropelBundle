@@ -19,6 +19,7 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 /**
  * @author William DURAND <william.durand1@gmail.com>
  */
+#[\Symfony\Component\Console\Attribute\AsCommand(name: 'propel:form:generate', description: 'Generate Form types stubs based on the schema.xml')]
 class FormGenerateCommand extends GeneratorAwareCommand
 {
     public const DEFAULT_FORM_TYPE_DIRECTORY = '/Form/Type';
@@ -29,7 +30,6 @@ class FormGenerateCommand extends GeneratorAwareCommand
     protected function configure()
     {
         $this
-            ->setDescription('Generate Form types stubs based on the schema.xml')
             ->addArgument('bundle', InputArgument::REQUIRED, 'The bundle to use to generate Form types')
             ->addArgument('models', InputArgument::IS_ARRAY, 'Model classes to generate Form Types from')
             ->addOption('force', 'f', InputOption::VALUE_NONE, 'Overwrite existing Form types')
@@ -40,8 +40,7 @@ The <info>%command.name%</info> command allows you to quickly generate Form Type
 
 The <info>--force</info> parameter allows you to overwrite existing files.
 EOT
-        )
-            ->setName('propel:form:generate');
+        );
     }
 
     /**

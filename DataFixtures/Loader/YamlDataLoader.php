@@ -21,18 +21,11 @@ use Symfony\Component\Yaml\Yaml;
 class YamlDataLoader extends AbstractDataLoader
 {
     /**
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface
-     */
-    private $container;
-
-    /**
      * {@inheritdoc}
      */
-    public function __construct($rootDir, ContainerInterface $container = null)
+    public function __construct($rootDir, private ?\Symfony\Component\DependencyInjection\ContainerInterface $container = null)
     {
         parent::__construct($rootDir);
-
-        $this->container = $container;
     }
 
     /**

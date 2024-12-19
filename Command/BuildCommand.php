@@ -20,6 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @author Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author William DURAND <william.durand1@gmail.com>
  */
+#[\Symfony\Component\Console\Attribute\AsCommand(name: 'propel:build', description: 'Hub for Propel build commands (Model classes, SQL)')]
 class BuildCommand extends AbstractCommand
 {
     /**
@@ -28,9 +29,7 @@ class BuildCommand extends AbstractCommand
     protected function configure()
     {
         $this
-            ->setDescription('Hub for Propel build commands (Model classes, SQL)')
-            ->setDefinition([new InputOption('classes', '', InputOption::VALUE_NONE, 'Build only classes'), new InputOption('sql', '', InputOption::VALUE_NONE, 'Build only SQL'), new InputOption('insert-sql', '', InputOption::VALUE_NONE, 'Build all and insert SQL'), new InputOption('connection', null, InputOption::VALUE_OPTIONAL, 'Set this parameter to define a connection to use')])
-            ->setName('propel:build');
+            ->setDefinition([new InputOption('classes', '', InputOption::VALUE_NONE, 'Build only classes'), new InputOption('sql', '', InputOption::VALUE_NONE, 'Build only SQL'), new InputOption('insert-sql', '', InputOption::VALUE_NONE, 'Build all and insert SQL'), new InputOption('connection', null, InputOption::VALUE_OPTIONAL, 'Set this parameter to define a connection to use')]);
     }
 
     /**

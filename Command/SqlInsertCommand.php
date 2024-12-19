@@ -18,6 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author William DURAND <william.durand1@gmail.com>
  */
+#[\Symfony\Component\Console\Attribute\AsCommand(name: 'propel:sql:insert', description: 'Insert SQL for current model')]
 class SqlInsertCommand extends AbstractCommand
 {
     /**
@@ -26,7 +27,6 @@ class SqlInsertCommand extends AbstractCommand
     protected function configure()
     {
         $this
-            ->setDescription('Insert SQL for current model')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Set this parameter to execute this action.')
             ->addOption('connection', null, InputOption::VALUE_OPTIONAL, 'Set this parameter to define a connection to use')
             ->setHelp(<<<EOT
@@ -39,7 +39,6 @@ The <info>--connection</info> parameter allows you to change the connection to u
 The default connection is the active connection (propel.dbal.default_connection).
 EOT
             )
-            ->setName('propel:sql:insert')
         ;
     }
 

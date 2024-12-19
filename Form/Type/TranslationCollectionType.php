@@ -28,7 +28,7 @@ class TranslationCollectionType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         if (!isset($options['entry_options']['data_class']) || null === $options['entry_options']['data_class']) {
             throw new MissingOptionsException('data_class must be set');
@@ -52,7 +52,7 @@ class TranslationCollectionType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         parent::configureOptions($resolver);
 

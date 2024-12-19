@@ -18,6 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author William DURAND <william.durand1@gmail.com>
  */
+#[\Symfony\Component\Console\Attribute\AsCommand(name: 'propel:migration:generate-diff', description: 'Generates SQL diff between the XML schemas and the current database structure')]
 class MigrationGenerateDiffCommand extends AbstractCommand
 {
     /**
@@ -26,7 +27,6 @@ class MigrationGenerateDiffCommand extends AbstractCommand
     protected function configure()
     {
         $this
-            ->setDescription('Generates SQL diff between the XML schemas and the current database structure')
             ->addOption('connection', null, InputOption::VALUE_OPTIONAL, 'Set this parameter to define a connection to use')
             ->setHelp(<<<EOT
 The <info>propel:migration:generate-diff</info> command compares the current database structure and the available schemas. If there is a difference, it creates a migration file.
@@ -34,7 +34,6 @@ The <info>propel:migration:generate-diff</info> command compares the current dat
   <info>php app/console propel:migration:generate-diff</info>
 EOT
             )
-            ->setName('propel:migration:generate-diff')
         ;
     }
 

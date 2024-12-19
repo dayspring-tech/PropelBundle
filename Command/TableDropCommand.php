@@ -20,6 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Maxime AILLOUD
  */
+#[\Symfony\Component\Console\Attribute\AsCommand(name: 'propel:table:drop', description: 'Drop a given table or all tables in the database.')]
 class TableDropCommand extends AbstractCommand
 {
     /**
@@ -28,7 +29,6 @@ class TableDropCommand extends AbstractCommand
     protected function configure()
     {
         $this
-            ->setDescription('Drop a given table or all tables in the database.')
             ->addArgument('table', InputArgument::IS_ARRAY, 'Set this parameter to défine which table to delete (default all the table in the database.')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Set this parameter to execute this action.')
             ->addOption('connection', null, InputOption::VALUE_OPTIONAL, 'Set this parameter to define a connection to use')
@@ -42,8 +42,7 @@ The <info>--force</info> parameter has to be used to actually drop the table.
 The <info>--connection</info> parameter allows you to change the connection to use.
 The default connection is the active connection (propel.dbal.default_connection).
 EOT
-        )
-            ->setName('propel:table:drop');
+        );
     }
 
     /**

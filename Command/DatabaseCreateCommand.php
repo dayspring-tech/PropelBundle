@@ -19,6 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author William DURAND
  */
+#[\Symfony\Component\Console\Attribute\AsCommand(name: 'propel:database:create', description: 'Create a given database or the default one.')]
 class DatabaseCreateCommand extends AbstractCommand
 {
     /**
@@ -27,9 +28,7 @@ class DatabaseCreateCommand extends AbstractCommand
     protected function configure()
     {
         $this
-            ->setDescription('Create a given database or the default one.')
-            ->addOption('connection', null, InputOption::VALUE_OPTIONAL, 'Set this parameter to define a connection to use')
-            ->setName('propel:database:create');
+            ->addOption('connection', null, InputOption::VALUE_OPTIONAL, 'Set this parameter to define a connection to use');
     }
 
     /**
