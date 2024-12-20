@@ -20,6 +20,8 @@ use Symfony\Component\Routing\RouterInterface;
  *
  *
  * @author     Jérémie Augustin <jeremie.augustin@pixel-cookers.com>
+ * @deprecated 1.9.0 The underlying ParamConverterInterface is a part of the abandoned
+ * sensio/framework-extra-bundle package which we are removing in 1.10.
  */
 class PropelParamConverter implements ParamConverterInterface
 {

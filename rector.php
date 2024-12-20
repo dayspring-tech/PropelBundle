@@ -5,7 +5,6 @@ declare(strict_types=1);
 use Rector\CodeQuality\Rector\ClassMethod\OptionalParametersAfterRequiredRector;
 use Rector\Config\RectorConfig;
 use Rector\Set\ValueObject\LevelSetList;
-use Rector\Set\ValueObject\SetList;
 use Rector\Symfony\Set\SymfonySetList;
 
 return RectorConfig::configure()
@@ -16,6 +15,7 @@ return RectorConfig::configure()
         SymfonySetList::SYMFONY_61,
         SymfonySetList::SYMFONY_62,
         SymfonySetList::SYMFONY_63,
+        SymfonySetList::SYMFONY_64,
     ])
     ->withSkip([
         __DIR__ . '/vendor',

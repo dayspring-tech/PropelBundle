@@ -11,6 +11,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
+/**
+ * @deprecated 1.9.0 The underlying ParamConverterInterface is a part of the abandoned
+ * sensio/framework-extra-bundle package which we are removing in 1.10.
+ */
 class PropelParamConverterTest extends TestCase
 {
     protected $con;
