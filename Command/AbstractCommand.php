@@ -19,6 +19,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Propel\Bundle\PropelBundle\Service\SchemaLocator;
 
 /**
  * Wrapper for Propel commands.
@@ -66,6 +67,12 @@ abstract class AbstractCommand extends Command
      * @var InputInterface
      */
     protected $input;
+
+    /**
+     *
+     * @var OutputInterface
+     */
+    protected $output;
 
     public function __construct(private ContainerInterface $container, $name = null)
     {
@@ -134,6 +141,7 @@ abstract class AbstractCommand extends Command
         }
 
         $this->input = $input;
+        $this->output = $output;
 
         $this->checkConfiguration();
 
@@ -235,20 +243,19 @@ abstract class AbstractCommand extends Command
     {
         $filesystem = new Filesystem();
 
-        if (!is_dir($cacheDir)) {
-            $filesystem->mkdir($cacheDir);
-        }
-
         $base = ltrim(realpath($kernel->getProjectDir()), DIRECTORY_SEPARATOR);
 
+        /** @var array<string, array{?BundleInterface, \SplFileInfo}> $finalSchemas */
         $finalSchemas = $this->getFinalSchemas($kernel, $this->bundle);
         foreach ($finalSchemas as $schema) {
             [$bundle, $finalSchema] = $schema;
 
-            $tempSchema = $bundle->getName().'-'.$finalSchema->getBaseName();
-            $this->tempSchemas[$tempSchema] = ['bundle'    => $bundle->getName(), 'basename'  => $finalSchema->getBaseName(), 'path'      => $finalSchema->getPathname()];
+            if ($bundle) {
+                $file = $cacheDir.DIRECTORY_SEPARATOR.'bundle-'.$bundle->getName().'-'.$finalSchema->getBaseName();
+            } else {
+                $file = $cacheDir.DIRECTORY_SEPARATOR.'app-'.$finalSchema->getBaseName();
+            }
 
-            $file = $cacheDir.DIRECTORY_SEPARATOR.$tempSchema;
             $filesystem->copy((string) $finalSchema, $file, true);
 
             // the package needs to be set absolute
@@ -259,31 +266,47 @@ abstract class AbstractCommand extends Command
             if (isset($database['package'])) {
                 // Do not use the prefix!
                 // This is used to override the package resulting from namespace conversion.
-                $package = $database['package'];
+                $database['package'] = $database['package'];
             } elseif (isset($database['namespace'])) {
-                $package = $this->getPackage($bundle, $database['namespace'], $base);
+                if ($bundle) {
+                    $database['package'] = $this->getPackage($bundle, (string)$database['namespace'], $base);
+                } else {
+                    $database['package'] = $this->getPackageFromApp((string)$database['namespace']);
+                }
             } else {
                 throw new \RuntimeException(
-                    sprintf('%s : Please define a `package` attribute or a `namespace` attribute for schema `%s`',
-                        $bundle->getName(), $finalSchema->getBaseName())
+                    sprintf(
+                        '%s : Please define a `package` attribute or a `namespace` attribute for schema `%s`',
+                        $bundle ? $bundle->getName() : 'App',
+                        $finalSchema->getBaseName()
+                    )
                 );
             }
 
-            $database['package'] = $package;
-
             if ($this->input && $this->input->hasOption('connection') && $this->input->getOption('connection')
                 && $database['name'] != $this->input->getOption('connection')) {
-                //we skip this schema because the connection name doesn't match the input value
-                unset($this->tempSchemas[$tempSchema]);
+                // we skip this schema because the connection name doesn't match the input values
                 $filesystem->remove($file);
+                $this->output->writeln(sprintf(
+                    '<info>Skipped schema %s due to database name missmatch (%s not in [%s]).</info>',
+                    $finalSchema->getPathname(),
+                    $database['name'],
+                    $this->input->getOption('connection')
+                ));
                 continue;
             }
 
             foreach ($database->table as $table) {
                 if (isset($table['package'])) {
                     $table['package'] = $table['package'];
-                } else {
-                    $table['package'] = $package;
+                } elseif (isset($table['namespace'])) {
+                    if ($bundle) {
+                        $table['package'] = $this->getPackage($bundle, (string)$table['namespace']);
+                    } else {
+                        $table['package'] = $this->getPackageFromApp((string)$table['namespace']);
+                    }
+                } elseif (isset($database['package'])) {
+                    $table['package'] = $database['package'];
                 }
             }
 
@@ -300,39 +323,10 @@ abstract class AbstractCommand extends Command
     protected function getFinalSchemas(KernelInterface $kernel, BundleInterface $bundle = null)
     {
         if (null !== $bundle) {
-            return $this->getSchemasFromBundle($bundle);
+            return $this->getSchemaLocator()->locateFromBundle($bundle);
         }
 
-        $finalSchemas = [];
-        foreach ($kernel->getBundles() as $bundle) {
-            $finalSchemas = array_merge($finalSchemas, $this->getSchemasFromBundle($bundle));
-        }
-
-        return $finalSchemas;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getSchemasFromBundle(BundleInterface $bundle)
-    {
-        $finalSchemas = [];
-
-        if (is_dir($dir = $bundle->getPath().'/Resources/config')) {
-            $finder  = new Finder();
-            $schemas = $finder->files()->name('*schema.xml')->followLinks()->in($dir);
-
-            if (iterator_count($schemas)) {
-                foreach ($schemas as $schema) {
-                    $logicalName = $this->transformToLogicalName($schema, $bundle);
-                    $finalSchema = new \SplFileInfo($this->getFileLocator()->locate($logicalName));
-
-                    $finalSchemas[(string) $finalSchema] = [$bundle, $finalSchema];
-                }
-            }
-        }
-
-        return $finalSchemas;
+        return $this->getSchemaLocator()->locateFromBundlesAndConfiguration($kernel->getBundles());
     }
 
     /**
@@ -451,6 +445,24 @@ EOT;
     }
 
     /**
+     * @param string $namespace
+     *
+     * @return string
+     */
+    protected function getPackageFromApp(string $namespace): string
+    {
+        if ('\\' === $namespace[0]) {
+            $namespace = substr($namespace, 1);
+        }
+
+        if (0 === stripos($namespace, 'App\\')) {
+            $namespace = substr($namespace, 4);
+        }
+
+        return 'src.'.str_replace('\\', '.', $namespace);
+    }
+
+    /**
      * Return the current Propel cache directory.
      * @return string The current Propel cache directory.
      */
@@ -465,6 +477,17 @@ EOT;
     protected function getFileLocator()
     {
         return $this->getContainer()->get('propel.file_locator');
+    }
+
+    /**
+     * @return SchemaLocator
+     */
+    protected function getSchemaLocator(): SchemaLocator
+    {
+        /** @var SchemaLocator $obj */
+        $obj = $this->getContainer()->get('propel.schema_locator');
+
+        return $obj;
     }
 
     /**
