@@ -16,7 +16,7 @@
   },
 
   "require": {
-    "php": ">=8.1",
+    "php": ">=8.0",
     "dayspring-tech/propel1": "^1.8.0",
     "symfony/framework-bundle": "^5.4|^6.0"
   },
