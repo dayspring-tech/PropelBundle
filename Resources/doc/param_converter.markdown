@@ -1,5 +1,6 @@
 The PropelParamConverter
 ========================
+**DEPRECATED AS OF 6.0**
 
 You can use the `PropelParamConverter` with the [SensioFrameworkExtraBundle](http://github.com/sensio/SensioFrameworkExtraBundle).
 You just need to put the right _Annotation_ on top of your controller:
