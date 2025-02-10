@@ -23,19 +23,14 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
  */
 class PropelFactory implements UserProviderFactoryInterface
 {
-    private $key;
-    private $providerId;
-
     /**
      * Constructor.
      *
      * @param string $key
      * @param string $providerId
      */
-    public function __construct($key, $providerId)
+    public function __construct(private $key, private $providerId)
     {
-        $this->key = $key;
-        $this->providerId = $providerId;
     }
 
     public function create(ContainerBuilder $container, $id, $config)

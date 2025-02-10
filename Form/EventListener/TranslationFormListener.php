@@ -22,20 +22,15 @@ use Symfony\Component\Form\FormEvents;
  */
 class TranslationFormListener implements EventSubscriberInterface
 {
-    private $columns;
-    private $dataClass;
-
-    public function __construct($columns, $dataClass)
+    public function __construct(private $columns, private $dataClass)
     {
-        $this->columns = $columns;
-        $this->dataClass = $dataClass;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
-        return array(
-            FormEvents::PRE_SET_DATA => array('preSetData', 1),
-        );
+        return [
+            FormEvents::PRE_SET_DATA => ['preSetData', 1],
+        ];
     }
 
     public function preSetData(FormEvent $event)
@@ -51,10 +46,10 @@ class TranslationFormListener implements EventSubscriberInterface
         foreach ($this->columns as $column => $options) {
             if (is_string($options)) {
                 $column = $options;
-                $options = array();
+                $options = [];
             }
             if (null === $options) {
-                $options = array();
+                $options = [];
             }
 
             $type = TextType::class;
@@ -66,13 +61,13 @@ class TranslationFormListener implements EventSubscriberInterface
                 $label = $options['label'];
             }
 
-            $customOptions = array();
+            $customOptions = [];
             if (array_key_exists('options', $options)) {
                 $customOptions = $options['options'];
             }
-            $options = array(
+            $options = [
                 'label' => $label.' '.strtoupper($data->getLocale()),
-            );
+            ];
 
             $options = array_merge($options, $customOptions);
 

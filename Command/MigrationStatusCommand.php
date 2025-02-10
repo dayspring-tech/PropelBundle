@@ -43,7 +43,7 @@ EOT
      *
      * @throws \InvalidArgumentException When the target directory does not exist
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->callPhing('status');
 

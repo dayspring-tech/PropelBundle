@@ -50,7 +50,7 @@ EOT
      *
      * @throws \InvalidArgumentException When the target directory does not exist
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if ($input->getOption('force')) {
             if ('prod' === $this->getApplication()->getKernel()->getEnvironment()) {
@@ -63,7 +63,7 @@ EOT
                 }
             }
 
-            list($name, $config) = $this->getConnection($input, $output);
+            [$name, $config] = $this->getConnection($input, $output);
             $dbName = $this->parseDbName($config['connection']['dsn']);
 
             if (null === $dbName) {
@@ -80,11 +80,11 @@ EOT
                 $output->writeln(sprintf('<info>Database <comment>%s</comment> has been dropped.</info>', $dbName));
                 return 0;
             } catch (\Exception $e) {
-                $this->writeSection($output, array(
+                $this->writeSection($output, [
                     '[Propel] Exception caught',
                     '',
                     $e->getMessage()
-                ), 'fg=white;bg=red');
+                ], 'fg=white;bg=red');
                 return 1;
             }
         } else {

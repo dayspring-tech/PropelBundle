@@ -26,7 +26,7 @@ class TranslationType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->addEventSubscriber(
             new TranslationFormListener($options['columns'], $options['data_class'])
@@ -44,11 +44,11 @@ class TranslationType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setRequired(array(
+        $resolver->setRequired([
             'data_class',
             'columns',
-        ));
+        ]);
     }
 }

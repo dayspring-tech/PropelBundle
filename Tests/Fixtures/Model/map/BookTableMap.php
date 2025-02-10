@@ -36,7 +36,7 @@ class BookTableMap extends TableMap
         // attributes
         $this->setName('book');
         $this->setPhpName('Book');
-        $this->setClassname('Propel\\Bundle\\PropelBundle\\Tests\\Fixtures\\Model\\Book');
+        $this->setClassname(\Propel\Bundle\PropelBundle\Tests\Fixtures\Model\Book::class);
         $this->setPackage('vendor/bundles/Propel/PropelBundle/Tests/Fixtures/Model');
         $this->setUseIdGenerator(true);
         // columns

@@ -13,7 +13,7 @@ namespace Propel\Bundle\PropelBundle\Tests\Fixtures;
 
 class ItemQuery
 {
-    private $map = array(
+    private $map = [
         'id' => \PropelColumnTypes::INTEGER,
         'value' => \PropelColumnTypes::VARCHAR,
         'price' => \PropelColumnTypes::FLOAT,
@@ -21,14 +21,14 @@ class ItemQuery
         'slug' => \PropelColumnTypes::VARCHAR,
         'enabled' => \PropelColumnTypes::BOOLEAN_EMU,
         'updated_at' => \PropelColumnTypes::TIMESTAMP,
-    );
+    ];
 
-    private $caseInsensitiveMap = array(
+    private $caseInsensitiveMap = [
         'isactive' => 'is_active',
         'updatedat' => 'updated_at',
-    );
+    ];
 
-    public static $result = array();
+    public static $result = [];
 
     public function find()
     {
@@ -53,7 +53,7 @@ class ItemQuery
         $cm->setType('INTEGER');
         $cm->setPhpName('Id');
 
-        return array('id' => $cm);
+        return ['id' => $cm];
     }
 
     /**
@@ -121,10 +121,10 @@ class ItemQuery
         $resellerRelation->setType(\RelationMap::MANY_TO_MANY);
         $resellerRelation->setLocalTable($resellerTable);
 
-        return array(
+        return [
             $mainAuthorRelation,
             $authorRelation,
             $resellerRelation,
-        );
+        ];
     }
 }

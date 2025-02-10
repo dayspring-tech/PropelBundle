@@ -38,7 +38,7 @@ SCHEMA;
 
         $builder = new \PropelQuickBuilder();
         $builder->setSchema($schema);
-        $builder->setClassTargets(array('tablemap', 'peer', 'object', 'query', 'peerstub', 'querystub'));
+        $builder->setClassTargets(['tablemap', 'peer', 'object', 'query', 'peerstub', 'querystub']);
         $builder->build();
     }
 
@@ -52,7 +52,7 @@ SCHEMA;
         $user2->setUsername('user2');
         $user2->save();
 
-        $provider = new PropelUserProvider('Propel\Bundle\PropelBundle\Tests\Fixtures\Model\User', 'username');
+        $provider = new PropelUserProvider(\Propel\Bundle\PropelBundle\Tests\Fixtures\Model\User::class, 'username');
 
         // try to change the user identity
         $user1->setUsername('user2');

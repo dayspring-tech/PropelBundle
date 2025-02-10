@@ -32,7 +32,7 @@ class XmlDataLoader extends AbstractDataLoader
      */
     protected function simpleXmlToArray($xml)
     {
-        $array = array();
+        $array = [];
         if ($xml instanceof \SimpleXMLElement) {
             foreach ($xml as $key => $value) {
                 // First make a valid key which is the Ns (Namespace) attribute
@@ -44,9 +44,9 @@ class XmlDataLoader extends AbstractDataLoader
                     }
                 }
 
-                $array[$key] = array();
+                $array[$key] = [];
                 foreach ($value as $elementKey => $elementValue) {
-                    $array[$key][$elementKey] = array();
+                    $array[$key][$elementKey] = [];
 
                     foreach ($elementValue->attributes() as $subkey => $subvalue) {
                         $array[$key][$elementKey][$subkey] = (string) $subvalue;

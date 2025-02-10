@@ -24,13 +24,6 @@ use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 class PropelDataCollector extends DataCollector
 {
     /**
-     * Propel logger.
-     *
-     * @var PropelLogger
-     */
-    private $logger;
-
-    /**
      * Propel configuration.
      *
      * @var \PropelConfiguration
@@ -43,9 +36,11 @@ class PropelDataCollector extends DataCollector
      * @param PropelLogger         $logger              A Propel logger.
      * @param \PropelConfiguration $propelConfiguration The Propel configuration object.
      */
-    public function __construct(PropelLogger $logger, \PropelConfiguration $propelConfiguration)
+    public function __construct(/**
+     * Propel logger.
+     */
+    private PropelLogger $logger, \PropelConfiguration $propelConfiguration)
     {
-        $this->logger = $logger;
         $this->propelConfiguration = $propelConfiguration;
     }
 
@@ -59,10 +54,10 @@ class PropelDataCollector extends DataCollector
      */
     public function collect(Request $request, Response $response, \Throwable $exception = null)
     {
-        $this->data = array(
+        $this->data = [
             'queries' => $this->buildQueries(),
             'querycount' => $this->countQueries(),
-        );
+        ];
     }
 
     /**
@@ -70,7 +65,7 @@ class PropelDataCollector extends DataCollector
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return 'propel';
     }
@@ -117,7 +112,7 @@ class PropelDataCollector extends DataCollector
      */
     private function buildQueries()
     {
-        $queries = array();
+        $queries = [];
 
         $outerGlue = $this->propelConfiguration->getParameter('debugpdo.logging.outerglue', ' | ');
         $innerGlue = $this->propelConfiguration->getParameter('debugpdo.logging.innerglue', ': ');
@@ -134,7 +129,7 @@ class PropelDataCollector extends DataCollector
             $time = trim($times[1]);
             $memory = trim($memories[1]);
 
-            $queries[] = array('connection' => $con, 'sql' => $sql, 'time' => $time, 'memory' => $memory);
+            $queries[] = ['connection' => $con, 'sql' => $sql, 'time' => $time, 'memory' => $memory];
         }
 
         return $queries;

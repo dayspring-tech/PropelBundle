@@ -18,17 +18,12 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 class SchemaLocator
 {
-    protected ContainerInterface $container;
-    protected FileLocatorInterface $fileLocator;
-
     /**
      * @param ContainerInterface $container
      * @param FileLocatorInterface $fileLocator
      */
-    public function __construct(ContainerInterface $container, FileLocatorInterface $fileLocator)
+    public function __construct(protected ContainerInterface $container, protected FileLocatorInterface $fileLocator)
     {
-        $this->container = $container;
-        $this->fileLocator = $fileLocator;
     }
 
     /**
@@ -46,7 +41,7 @@ class SchemaLocator
         $schemas = $finder->files()->name('*schema.xml')->followLinks()->in($dir);
         if (iterator_count($schemas)) {
             foreach ($schemas as $schema) {
-                $finalSchemas[(string) $schema] = array(null, $schema);
+                $finalSchemas[(string) $schema] = [null, $schema];
             }
         }
 
@@ -60,7 +55,7 @@ class SchemaLocator
      */
     public function locateFromBundles(array $bundles): array
     {
-        $schemas = array();
+        $schemas = [];
         foreach ($bundles as $bundle) {
             $schemas = array_merge($schemas, $this->locateFromBundle($bundle));
         }
@@ -78,7 +73,7 @@ class SchemaLocator
         // no bundle/bundle
         $dir = ($bundle->getName() === AppBundle::NAME)? $bundle->getPath().'/config' : $bundle->getPath().'/Resources/config';
 
-        $finalSchemas = array();
+        $finalSchemas = [];
 
         if (is_dir($dir)) {
             $finder  = new Finder();
@@ -90,7 +85,7 @@ class SchemaLocator
 
                     $finalSchema = new \SplFileInfo($this->fileLocator->locate($logicalName));
 
-                    $finalSchemas[(string) $finalSchema] = array($bundle, $finalSchema);
+                    $finalSchemas[(string) $finalSchema] = [$bundle, $finalSchema];
                 }
             }
         }

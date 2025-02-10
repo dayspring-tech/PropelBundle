@@ -48,7 +48,7 @@ abstract class GeneratorAwareCommand extends AbstractCommand
 
         if (file_exists($propelIni = $this->getContainer()->getParameter('kernel.project_dir') . '/app/config/propel.ini')) {
             foreach ($this->getProperties($propelIni) as $key => $value) {
-                if (0 === strpos($key, 'propel.')) {
+                if (str_starts_with($key, 'propel.')) {
                     $newKey = substr($key, strlen('propel.'));
 
                     $j = strpos($newKey, '.');

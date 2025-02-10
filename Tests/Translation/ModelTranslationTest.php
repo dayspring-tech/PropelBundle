@@ -32,7 +32,7 @@ class ModelTranslationTest extends TestCase
         $builder = new \PropelQuickBuilder();
         $builder->setSchema($schema);
         if (class_exists('Propel\Bundle\PropelBundle\Tests\Fixtures\Model\map\TranslationTableMap')) {
-            $builder->setClassTargets(array());
+            $builder->setClassTargets([]);
         }
 
         $this->con = $builder->build();
@@ -52,8 +52,8 @@ class ModelTranslationTest extends TestCase
 
         $resource = $this->getResource();
 
-        $translator = $this->getMockBuilder('Symfony\Component\Translation\Translator')
-            ->setConstructorArgs(array('en_US'))
+        $translator = $this->getMockBuilder(\Symfony\Component\Translation\Translator::class)
+            ->setConstructorArgs(['en_US'])
             ->getMock();
         $translator
             ->expects($this->once())
@@ -94,7 +94,7 @@ class ModelTranslationTest extends TestCase
 
     public function testLoadInvalidResource()
     {
-        $invalidResource = $this->getMockBuilder('Symfony\Component\Config\Resource\ResourceInterface')->getMock();
+        $invalidResource = $this->getMockBuilder(\Symfony\Component\Config\Resource\ResourceInterface::class)->getMock();
 
         $resource = $this->getResource();
         $catalogue = $resource->load($invalidResource, 'en_US');
@@ -141,28 +141,28 @@ class ModelTranslationTest extends TestCase
         $resource = $this->getResource();
         $catalogue = $resource->load($resource, 'en_US', 'test');
 
-        $this->assertInstanceOf('Symfony\Component\Translation\MessageCatalogue', $catalogue);
+        $this->assertInstanceOf(\Symfony\Component\Translation\MessageCatalogue::class, $catalogue);
         $this->assertEquals('en_US', $catalogue->getLocale());
 
-        $expected = array(
-            'test' => array(
+        $expected = [
+            'test' => [
                 'example.key' => 'This is an example translation.',
-            ),
-        );
+            ],
+        ];
 
         $this->assertEquals($expected, $catalogue->all());
     }
 
     public function testDump()
     {
-        $catalogue = new MessageCatalogue('en_US', array(
-            'test' => array(
+        $catalogue = new MessageCatalogue('en_US', [
+            'test' => [
                 'example.key' => 'This is an example translation.',
-            ),
-            'test2' => array(
+            ],
+            'test2' => [
                 'example.key' => 'This is an example translation.',
-            ),
-        ));
+            ],
+        ]);
 
         $resource = $this->getResource();
         $this->assertEmpty($resource->load($resource, 'en_US', 'test')->all());
@@ -172,35 +172,35 @@ class ModelTranslationTest extends TestCase
         $stmt = $this->con->prepare('SELECT `key`, `message`, `locale`, `domain` FROM `translation`;');
         $stmt->execute();
 
-        $result = array();
+        $result = [];
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             $result[] = $row;
         }
 
-        $expected = array(
-            array(
+        $expected = [
+            [
                 'key' => 'example.key',
                 'message' => 'This is an example translation.',
                 'locale' => 'en_US',
                 'domain' => 'test',
-            ),
-            array(
+            ],
+            [
                 'key' => 'example.key',
                 'message' => 'This is an example translation.',
                 'locale' => 'en_US',
                 'domain' => 'test2',
-            ),
-        );
+            ],
+        ];
 
         $this->assertEquals($expected, $result);
     }
 
     protected function getResource()
     {
-        return new ModelTranslation(self::MODEL_CLASS, array(
-            'columns' => array(
+        return new ModelTranslation(self::MODEL_CLASS, [
+            'columns' => [
                 'translation' => 'message',
-            ),
-        ));
+            ],
+        ]);
     }
 }

@@ -34,7 +34,7 @@ XML;
         $filename = $this->getTempFile($fixtures);
 
         $loader = new XmlDataLoader(__DIR__.'/../../Fixtures/DataFixtures/Loader');
-        $loader->load(array($filename), 'default');
+        $loader->load([$filename], 'default');
 
         $books = \Propel\Bundle\PropelBundle\Tests\Fixtures\DataFixtures\Loader\BookPeer::doSelect(new \Criteria(), $this->con);
         $this->assertCount(1, $books);
