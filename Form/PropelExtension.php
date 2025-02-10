@@ -23,7 +23,7 @@ class PropelExtension extends AbstractExtension
 {
     protected function loadTypes(): array
     {
-        return [new Type\ModelType(PropertyAccess::createPropertyAccessor()), new Type\TranslationCollectionType(), new Type\TranslationType()];
+        return [new Type\ModelType(), new Type\TranslationCollectionType(), new Type\TranslationType()];
     }
 
     protected function loadTypeGuesser(): ?\Symfony\Component\Form\FormTypeGuesserInterface

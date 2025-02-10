@@ -23,7 +23,9 @@ class SyntaxExtension extends AbstractExtension
 {
     public function getFilters()
     {
-        return [new TwigFilter('format_sql', $this->formatSQL(...), ['is_safe' => ['html']])];
+        return [
+            new TwigFilter('format_sql', array($this, 'formatSQL'), array('is_safe' => array('html'))),
+        ];
     }
 
     public function getName()

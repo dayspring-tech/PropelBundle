@@ -3,7 +3,7 @@
 namespace Propel\Bundle\PropelBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class BaseAbstractType extends AbstractType
 {
@@ -44,7 +44,7 @@ abstract class BaseAbstractType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function setDefaultOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults($this->options);
     }
