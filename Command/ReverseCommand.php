@@ -19,6 +19,7 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @author William DURAND <william.durand1@gmail.com>
  */
+#[\Symfony\Component\Console\Attribute\AsCommand(name: 'propel:reverse', description: 'Generate XML schema from reverse-engineered database')]
 class ReverseCommand extends AbstractCommand
 {
     /**
@@ -27,7 +28,6 @@ class ReverseCommand extends AbstractCommand
     protected function configure()
     {
         $this
-            ->setDescription('Generate XML schema from reverse-engineered database')
             ->addOption('connection', null, InputOption::VALUE_OPTIONAL, 'Set this parameter to define a connection to use')
             ->setHelp(<<<EOT
 The <info>propel:reverse</info> command generates an XML schema from reverse-engineered database.
@@ -37,7 +37,6 @@ The <info>--connection</info> parameter allows you to change the connection to u
 The default connection is the active connection (propel.dbal.default_connection).
 EOT
             )
-            ->setName('propel:reverse')
         ;
 
     }

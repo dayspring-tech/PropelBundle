@@ -193,7 +193,7 @@ abstract class BaseBookQuery extends ModelCriteria
         if (null === $comparison) {
             if (is_array($name)) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $name)) {
+            } elseif (preg_match('/[\%\*]/', (string) $name)) {
                 $name = str_replace('*', '%', $name);
                 $comparison = Criteria::LIKE;
             }
@@ -222,7 +222,7 @@ abstract class BaseBookQuery extends ModelCriteria
         if (null === $comparison) {
             if (is_array($slug)) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $slug)) {
+            } elseif (preg_match('/[\%\*]/', (string) $slug)) {
                 $slug = str_replace('*', '%', $slug);
                 $comparison = Criteria::LIKE;
             }

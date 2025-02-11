@@ -24,7 +24,7 @@ class SyntaxExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            new TwigFilter('format_sql', [$this, 'formatSQL'], ['is_safe' => ['html']]),
+            new TwigFilter('format_sql', $this->formatSQL(...), ['is_safe' => ['html']]),
         ];
     }
 
@@ -90,7 +90,7 @@ class SyntaxExtension extends AbstractExtension
             '<span class="SQLComment">\\1</span>',
             '<span class="SQLName">\\1</span>',
             '<span class="SQLName">\\1</span>',
-        ], $sql);
+        ], (string) $sql);
 
         return $sql;
     }

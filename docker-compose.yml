@@ -1,6 +1,6 @@
 version: "3.9"
 services:
   php:
-    image: php:8.0
+    image: php:8.2
     volumes:
       - ./:/project

@@ -73,7 +73,7 @@ abstract class AbstractDataDumper extends AbstractDataHandler implements DataDum
             $haveParents = false;
             $fixColumn   = null;
 
-            $shortTableName = substr($tableName, strrpos($tableName, '\\') + 1, strlen($tableName));
+            $shortTableName = substr((string) $tableName, strrpos((string) $tableName, '\\') + 1, strlen((string) $tableName));
 
             foreach ($tableMap->getColumns() as $column) {
                 $col = strtolower($column->getName());
@@ -161,7 +161,7 @@ abstract class AbstractDataDumper extends AbstractDataHandler implements DataDum
                                 }
                             } elseif (!$isPrimaryKey || ($isPrimaryKey && !$tableMap->isUseIdGenerator())) {
                                 if (!empty($row[$col]) && PropelColumnTypes::PHP_ARRAY === $column->getType()) {
-                                    $serialized = substr($row[$col], 2, -2);
+                                    $serialized = substr((string) $row[$col], 2, -2);
                                     $row[$col]  = $serialized ? explode(' | ', $serialized) : [];
                                 }
 
@@ -229,7 +229,7 @@ abstract class AbstractDataDumper extends AbstractDataHandler implements DataDum
     {
         $sql = sprintf('SELECT * FROM %s WHERE %s %s',
             constant(constant($tableName.'::PEER').'::TABLE_NAME'),
-            strtolower($column->getName()),
+            strtolower((string) $column->getName()),
             null === $in ? 'IS NULL' : 'IN ('.$in.')');
 
         $stmt = $this->con->prepare($sql);
@@ -237,7 +237,7 @@ abstract class AbstractDataDumper extends AbstractDataHandler implements DataDum
 
         $in = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $in[] = "'".$row[strtolower($column->getRelatedColumnName())]."'";
+            $in[] = "'".$row[strtolower((string) $column->getRelatedColumnName())]."'";
             $resultsSets[] = $row;
         }
 

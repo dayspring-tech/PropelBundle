@@ -20,6 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @author Fabien Potencier <fabien.potencier@symfony-project.com>
  * @author William DURAND <william.durand1@gmail.com>
  */
+#[\Symfony\Component\Console\Attribute\AsCommand(name: 'propel:model:build', description: 'Build the Propel Object Model classes based on XML schemas')]
 class ModelBuildCommand extends AbstractCommand
 {
     /**
@@ -28,7 +29,6 @@ class ModelBuildCommand extends AbstractCommand
     protected function configure()
     {
         $this
-            ->setDescription('Build the Propel Object Model classes based on XML schemas')
             ->addArgument('bundle', InputArgument::OPTIONAL, 'The bundle to generate model classes from')
             ->addOption('connection', null, InputOption::VALUE_OPTIONAL, 'Set this parameter to define a connection to use')
             ->setHelp(<<<EOT
@@ -37,7 +37,6 @@ The <info>%command.name%</info> command builds the Propel runtime model classes 
   <info>php app/console %command.full_name%</info>
 EOT
             )
-            ->setName('propel:model:build')
         ;
     }
 

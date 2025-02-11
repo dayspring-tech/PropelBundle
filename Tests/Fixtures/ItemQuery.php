@@ -79,7 +79,7 @@ class ItemQuery
      */
     public function hasColumnByInsensitiveCase($column)
     {
-        $column = strtolower($column);
+        $column = strtolower((string) $column);
 
         return in_array($column, array_keys($this->caseInsensitiveMap));
     }
@@ -89,7 +89,7 @@ class ItemQuery
      */
     public function getColumnByInsensitiveCase($column)
     {
-        $column = strtolower($column);
+        $column = strtolower((string) $column);
 
         if (isset($this->caseInsensitiveMap[$column])) {
             return $this->getColumn($this->caseInsensitiveMap[$column]);

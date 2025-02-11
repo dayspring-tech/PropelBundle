@@ -9,9 +9,14 @@ use Rector\Symfony\Set\SymfonySetList;
 
 return RectorConfig::configure()
     ->withSets([
-        LevelSetList::UP_TO_PHP_80,
+        LevelSetList::UP_TO_PHP_82,
         SymfonySetList::SYMFONY_54,
         SymfonySetList::SYMFONY_60,
+        SymfonySetList::SYMFONY_61,
+        SymfonySetList::SYMFONY_62,
+        SymfonySetList::SYMFONY_63,
+        SymfonySetList::SYMFONY_64,
+        SymfonySetList::SYMFONY_70,
     ])
     ->withSkip([
         __DIR__ . '/vendor',

@@ -18,6 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author William DURAND <william.durand1@gmail.com>
  */
+#[\Symfony\Component\Console\Attribute\AsCommand(name: 'propel:migration:migrate', description: 'Executes the next migrations up')]
 class MigrationMigrateCommand extends AbstractCommand
 {
     /**
@@ -26,7 +27,6 @@ class MigrationMigrateCommand extends AbstractCommand
     protected function configure()
     {
         $this
-            ->setDescription('Executes the next migrations up')
             ->setDefinition([
                 new InputOption('--up', '', InputOption::VALUE_NONE, 'Executes the next migration up'),
                 new InputOption('--down', '', InputOption::VALUE_NONE, 'Executes the next migration down'),
@@ -43,7 +43,6 @@ The <info>propel:migration:migrate</info> command checks the version of the data
     <info>php app/console propel:migration:migrate --down</info> : checks the version of the database structure, and looks for migration files already executed (i.e. with a lower version timestamp). <comment>The last executed migration found is reversed.</comment>
 EOT
             )
-            ->setName('propel:migration:migrate')
         ;
     }
 

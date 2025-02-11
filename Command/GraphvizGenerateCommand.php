@@ -17,6 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author William DURAND <william.durand1@gmail.com>
  */
+#[\Symfony\Component\Console\Attribute\AsCommand(name: 'propel:graphviz:generate', description: 'Generates Graphviz file for your project')]
 class GraphvizGenerateCommand extends AbstractCommand
 {
     /**
@@ -25,14 +26,12 @@ class GraphvizGenerateCommand extends AbstractCommand
     protected function configure()
     {
         $this
-            ->setDescription('Generates Graphviz file for your project')
             ->setHelp(<<<EOT
 The <info>propel:graphviz</info> generates Graphviz file for your project.
 
   <info>php app/console propel:graphviz</info>
 EOT
             )
-            ->setName('propel:graphviz:generate')
         ;
     }
 

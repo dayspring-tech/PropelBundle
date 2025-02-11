@@ -24,6 +24,7 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
  *
  * @author William DURAND <william.durand1@gmail.com>
  */
+#[\Symfony\Component\Console\Attribute\AsCommand(name: 'propel:fixtures:load', description: 'Load XML, SQL and/or YAML fixtures')]
 class FixturesLoadCommand extends AbstractCommand
 {
     /**
@@ -50,7 +51,6 @@ class FixturesLoadCommand extends AbstractCommand
     protected function configure()
     {
         $this
-            ->setDescription('Load XML, SQL and/or YAML fixtures')
             ->addArgument('bundle', InputArgument::OPTIONAL, 'The bundle to load fixtures from')
             ->addOption(
                 'dir', 'd', InputOption::VALUE_OPTIONAL,
@@ -104,7 +104,6 @@ YAML fixtures are:
 </comment>
 EOT
         )
-            ->setName('propel:fixtures:load')
             ;
     }
 

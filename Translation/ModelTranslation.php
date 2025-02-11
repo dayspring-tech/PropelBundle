@@ -118,7 +118,7 @@ class ModelTranslation implements DumperInterface, LoaderInterface, ResourceInte
     /**
      * {@inheritdoc}
      */
-    public function dump(MessageCatalogue $messages, $options = [])
+    public function dump(MessageCatalogue $messages, $options = []): void
     {
         $connection = \Propel::getConnection($this->query->getDbName());
         $connection->beginTransaction();

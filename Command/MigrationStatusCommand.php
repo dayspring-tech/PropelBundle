@@ -17,6 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author William DURAND <william.durand1@gmail.com>
  */
+#[\Symfony\Component\Console\Attribute\AsCommand(name: 'propel:migration:status', description: 'Lists the migrations yet to be executed')]
 class MigrationStatusCommand extends AbstractCommand
 {
     /**
@@ -25,14 +26,12 @@ class MigrationStatusCommand extends AbstractCommand
     protected function configure()
     {
         $this
-            ->setDescription('Lists the migrations yet to be executed')
             ->setHelp(<<<EOT
 The <info>propel:migration:status</info> command checks the version of the database structure, and looks for migration files not yet executed (i.e. with a greater version timestamp).
 
   <info>php app/console propel:migration:status</info>
 EOT
             )
-            ->setName('propel:migration:status')
         ;
     }
 

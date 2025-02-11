@@ -7,7 +7,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class User extends BaseUser implements UserInterface
 {
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
     }
 

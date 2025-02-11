@@ -133,7 +133,7 @@ class ModelType extends AbstractType
             /** @var \ColumnMap $firstIdentifier */
             $firstIdentifier = current($identifier);
             if (count($identifier) === 1 && $firstIdentifier->getPdoType() === \PDO::PARAM_INT) {
-                return [self::class, 'createChoiceName'];
+                return self::createChoiceName(...);
             }
             return null;
         };
@@ -182,14 +182,14 @@ class ModelType extends AbstractType
         $choiceLabelNormalizer = function (Options $options, $choiceLabel) {
             if ($choiceLabel === null) {
                 if ($options['property'] == null) {
-                    $choiceLabel = [self::class, 'createChoiceLabel'];
+                    $choiceLabel = self::createChoiceLabel(...);
                 } else {
                     $valueProperty = $options['property'];
                     /** @var \ModelCriteria $query */
                     $query = $options['query'];
 
                     $choiceLabel = function($choice) use ($valueProperty, $query) {
-                        $getter = 'get'.ucfirst($valueProperty);
+                        $getter = 'get'.ucfirst((string) $valueProperty);
                         if (!method_exists($choice, $getter)) {
                             $getter = 'get' . ucfirst($query->getTableMap()->getColumn($valueProperty)->getPhpName());
                         }

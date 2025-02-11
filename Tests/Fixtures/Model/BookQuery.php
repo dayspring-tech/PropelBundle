@@ -61,7 +61,7 @@ class BookQuery extends BaseBookQuery
     /**
      * fake for test
      */
-    public function filterByName($name = null, $comparison = null)
+    public function filterByName($name = null, $comparison = null): never
     {
         throw new \Exception('Test should never call this method');
     }

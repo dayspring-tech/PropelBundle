@@ -46,21 +46,21 @@ class PropelTypeGuesser implements FormTypeGuesserInterface
 
         foreach ($table->getRelations() as $relation) {
             if ($relation->getType() === \RelationMap::MANY_TO_ONE) {
-                if (strtolower($property) === strtolower($relation->getName())) {
+                if (strtolower((string) $property) === strtolower((string) $relation->getName())) {
                     return new TypeGuess(ModelType::class, [
                         'class' => $relation->getForeignTable()->getClassName(),
                         'multiple' => false,
                     ], Guess::HIGH_CONFIDENCE);
                 }
             } elseif ($relation->getType() === \RelationMap::ONE_TO_MANY) {
-                if (strtolower($property) === strtolower($relation->getPluralName())) {
+                if (strtolower((string) $property) === strtolower((string) $relation->getPluralName())) {
                     return new TypeGuess(ModelType::class, [
                         'class' => $relation->getForeignTable()->getClassName(),
                         'multiple' => true,
                     ], Guess::HIGH_CONFIDENCE);
                 }
             } elseif ($relation->getType() === \RelationMap::MANY_TO_MANY) {
-                if (strtolower($property) == strtolower($relation->getPluralName())) {
+                if (strtolower((string) $property) == strtolower((string) $relation->getPluralName())) {
                     return new TypeGuess(ModelType::class, [
                         'class' => $relation->getLocalTable()->getClassName(),
                         'multiple' => true,

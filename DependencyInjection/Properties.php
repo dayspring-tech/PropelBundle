@@ -25,7 +25,7 @@ class Properties
         /**
          * Build properties.
          */
-        private array $properties = []
+        private readonly array $properties = []
     )
     {
     }

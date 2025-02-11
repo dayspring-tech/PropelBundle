@@ -74,7 +74,7 @@ abstract class AbstractCommand extends Command
      */
     protected $output;
 
-    public function __construct(private ContainerInterface $container, $name = null)
+    public function __construct(private readonly ContainerInterface $container, $name = null)
     {
         parent::__construct($name);
     }
@@ -107,12 +107,12 @@ abstract class AbstractCommand extends Command
                 DIRECTORY_SEPARATOR,
                 array_merge(
                     array_slice($path, 0, $length),
-                    explode('\\', $namespace)
+                    explode('\\', (string) $namespace)
                 )
             );
         } else {
             // PSR-4
-            $ns = explode('\\', $namespace);
+            $ns = explode('\\', (string) $namespace);
 
             $diff = array_diff($ns, $bundle_namespace);
 
@@ -149,8 +149,8 @@ abstract class AbstractCommand extends Command
 
         if ($input->hasArgument('bundle') && $input->getArgument('bundle')) {
             $bundleName = $input->getArgument('bundle');
-            if (str_starts_with($bundleName, '@')) {
-                $bundleName = substr($bundleName, 1);
+            if (str_starts_with((string) $bundleName, '@')) {
+                $bundleName = substr((string) $bundleName, 1);
             }
 
             $this->bundle = $this->getContainer()->get('kernel')->getBundle($bundleName);
@@ -571,7 +571,7 @@ EOT;
      */
     protected function writeSummary(OutputInterface $output, $taskname)
     {
-        foreach (explode("\n", $this->buffer) as $line) {
+        foreach (explode("\n", (string) $this->buffer) as $line) {
             if (str_contains($line, '[' . $taskname . ']')) {
                 $arr  = preg_split('#\[' . $taskname . '\] #', $line);
                 $info = $arr[1];

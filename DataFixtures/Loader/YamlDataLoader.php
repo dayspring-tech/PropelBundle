@@ -23,7 +23,7 @@ class YamlDataLoader extends AbstractDataLoader
     /**
      * {@inheritdoc}
      */
-    public function __construct($rootDir, private ?\Symfony\Component\DependencyInjection\ContainerInterface $container = null)
+    public function __construct($rootDir, private readonly ?\Symfony\Component\DependencyInjection\ContainerInterface $container = null)
     {
         parent::__construct($rootDir);
     }
