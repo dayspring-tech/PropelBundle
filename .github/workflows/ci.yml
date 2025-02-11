@@ -16,9 +16,16 @@ jobs:
           - '8.2'
           - '8.3'
           - '8.4'
-        deps:
-          - 'highest'
-          - 'lowest'
+        symfony_version:
+          - '5.4.*'
+          - '6.0.*'
+          - '6.1.*'
+          - '6.2.*'
+          - '6.3.*'
+          - '6.4.*'
+#        deps:
+#          - 'highest'
+#          - 'lowest'
 
     steps:
       - uses: actions/checkout@v4
@@ -46,6 +53,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.php }}-${{ matrix.composer }}-composer-
 
+      - name: Set Symfony minor version
+        run: |
+          sed -i 's|\("symfony/.*"\): ".*"|\1: "${{ matrix.symfony_version }}"|' composer.json
+        working-directory: ./
+
       - name: Validate composer.json and composer.lock
         run: composer validate
         working-directory: ./
@@ -53,7 +65,7 @@ jobs:
       - name: Install dependencies
         uses: ramsey/composer-install@v3
         with:
-          dependency-versions: '${{ matrix.deps }}'
+#          dependency-versions: '${{ matrix.deps }}'
           working-directory: ./
 
       - name: Run Tests
