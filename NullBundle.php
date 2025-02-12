@@ -10,8 +10,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  * Class AppBundle
  * @package App
  */
-class AppBundle extends Bundle {
-    const NAME = 'AppBundle';
+class NullBundle extends Bundle {
+    const NAME = 'NullBundle';
 
     public function __construct(ContainerInterface $container)
     {

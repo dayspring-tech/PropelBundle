@@ -10,7 +10,7 @@
 
 namespace Propel\Bundle\PropelBundle\Service;
 
-use Propel\Bundle\PropelBundle\AppBundle;
+use Propel\Bundle\PropelBundle\NullBundle;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\Finder;
@@ -71,7 +71,7 @@ class SchemaLocator
     public function locateFromBundle(BundleInterface $bundle): array
     {
         // no bundle/bundle
-        $dir = ($bundle->getName() === AppBundle::NAME)? $bundle->getPath().'/config' : $bundle->getPath().'/Resources/config';
+        $dir = ($bundle->getName() === NullBundle::NAME)? $bundle->getPath().'/config' : $bundle->getPath().'/Resources/config';
 
         $finalSchemas = [];
 
@@ -104,13 +104,13 @@ class SchemaLocator
 
         $schemaPath = str_replace(
         // no bundle/bundle
-            $bundle->getPath(). DIRECTORY_SEPARATOR . ($bundle->getName() == AppBundle::NAME ? '' : 'Resources' . DIRECTORY_SEPARATOR) . 'config' . DIRECTORY_SEPARATOR,
+            $bundle->getPath(). DIRECTORY_SEPARATOR . ($bundle->getName() == NullBundle::NAME ? '' : 'Resources' . DIRECTORY_SEPARATOR) . 'config' . DIRECTORY_SEPARATOR,
             '',
             $schema->getRealPath()
         );
 
         //
-        if ($bundle->getName() == AppBundle::NAME) {
+        if ($bundle->getName() == NullBundle::NAME) {
             return sprintf('%s/config/%s', $bundle->getPath(), $schemaPath);
         }
 
