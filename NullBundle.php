@@ -7,11 +7,11 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * this class is made to simulate bundle containing base structure so we can work with no bundle architecture used from s4+
- * Class AppBundle
- * @package App
+ * Class NullBundle
+ * @package Null
  */
-class AppBundle extends Bundle {
-    const NAME = 'AppBundle';
+class NullBundle extends Bundle {
+    const NAME = 'NullBundle';
 
     public function __construct(ContainerInterface $container)
     {

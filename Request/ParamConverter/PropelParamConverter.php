@@ -20,6 +20,9 @@ use Symfony\Component\Routing\RouterInterface;
  *
  *
  * @author     Jérémie Augustin <jeremie.augustin@pixel-cookers.com>
+ *
+ * @deprecated 6.0 The underlying ParamConverterInterface is a part of the abandoned
+ * sensio/framework-extra-bundle package which we are removing in 7.0.
  */
 class PropelParamConverter implements ParamConverterInterface
 {
@@ -33,13 +36,13 @@ class PropelParamConverter implements ParamConverterInterface
      * list of column/value to use with filterBy
      * @var array
      */
-    protected $filters = array();
+    protected $filters = [];
 
     /**
      * list of route parameters to exclude from the conversion process
      * @var array
      */
-    protected $exclude = array();
+    protected $exclude = [];
 
     /**
      * list of with option use to hydrate related object
@@ -76,8 +79,8 @@ class PropelParamConverter implements ParamConverterInterface
     {
         $classQuery = $configuration->getClass() . 'Query';
         $classPeer = $configuration->getClass() . 'Peer';
-        $this->filters = array();
-        $this->exclude = array();
+        $this->filters = [];
+        $this->exclude = [];
 
         if (!class_exists($classQuery)) {
             throw new \Exception(sprintf('The %s Query class does not exist', $classQuery));
@@ -112,11 +115,11 @@ class PropelParamConverter implements ParamConverterInterface
                 }
             }
         } else {
-            $this->exclude = isset($options['exclude'])? $options['exclude'] : array();
+            $this->exclude = $options['exclude'] ?? [];
             $this->filters = $request->attributes->all();
         }
 
-        $this->withs = isset($options['with'])? is_array($options['with'])? $options['with'] : array($options['with']) : array();
+        $this->withs = isset($options['with'])? is_array($options['with'])? $options['with'] : [$options['with']] : [];
 
         // find by Pk
         if (false === $object = $this->findPk($classQuery, $request)) {
@@ -202,7 +205,7 @@ class PropelParamConverter implements ParamConverterInterface
                 try {
                     $query->{'filterBy' . PropelInflector::camelize($column)}($value);
                     $hasCriteria = true;
-                } catch (\PropelException $e) { }
+                } catch (\PropelException) { }
             }
         }
 
@@ -260,18 +263,14 @@ class PropelParamConverter implements ParamConverterInterface
      */
     protected function getValidJoin($with)
     {
-        switch (trim(str_replace(array('_', 'JOIN'), '', strtoupper($with[1])))) {
-            case 'LEFT':
-                return \Criteria::LEFT_JOIN;
-            case 'RIGHT':
-                return \Criteria::RIGHT_JOIN;
-            case 'INNER':
-                return \Criteria::INNER_JOIN;
-        }
-
-        throw new \Exception(sprintf('ParamConverter : "with" parameter "%s" is invalid,
+        return match (trim(str_replace(['_', 'JOIN'], '', strtoupper($with[1])))) {
+            'LEFT' => \Criteria::LEFT_JOIN,
+            'RIGHT' => \Criteria::RIGHT_JOIN,
+            'INNER' => \Criteria::INNER_JOIN,
+            default => throw new \Exception(sprintf('ParamConverter : "with" parameter "%s" is invalid,
                 only "left", "right" or "inner" are allowed for join option',
-                var_export($with, true)));
+                    var_export($with, true))),
+        };
     }
 
 }

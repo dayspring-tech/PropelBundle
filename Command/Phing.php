@@ -29,7 +29,7 @@ class Phing extends \Phing
         // by placing current directory on the include path our defaults will be loaded
         // see ticket #5054
         $includePath = get_include_path();
-        set_include_path(dirname(__FILE__).PATH_SEPARATOR.$includePath);
+        set_include_path(__DIR__.PATH_SEPARATOR.$includePath);
         parent::runBuild();
         set_include_path($includePath);
     }

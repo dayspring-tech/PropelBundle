@@ -13,14 +13,9 @@ namespace Propel\Bundle\PropelBundle\Tests\Fixtures;
 
 class Column extends \ColumnMap
 {
-    private $name;
-    protected $type;
-
-    public function __construct($name, $type)
+    public function __construct(private $name, protected $type)
     {
-        $this->name = $name;
-        $this->type = $type;
-        $this->phpName = ucfirst($name);
+        $this->phpName = ucfirst($this->name);
     }
 
     public function isText()
@@ -28,18 +23,10 @@ class Column extends \ColumnMap
         if (!$this->type) {
             return false;
         }
-
-        switch ($this->type) {
-            case \PropelColumnTypes::CHAR:
-            case \PropelColumnTypes::VARCHAR:
-            case \PropelColumnTypes::LONGVARCHAR:
-            case \PropelColumnTypes::BLOB:
-            case \PropelColumnTypes::CLOB:
-            case \PropelColumnTypes::CLOB_EMU:
-                return true;
-        }
-
-        return false;
+        return match ($this->type) {
+            \PropelColumnTypes::CHAR, \PropelColumnTypes::VARCHAR, \PropelColumnTypes::LONGVARCHAR, \PropelColumnTypes::BLOB, \PropelColumnTypes::CLOB, \PropelColumnTypes::CLOB_EMU => true,
+            default => false,
+        };
     }
 
     public function getSize()

@@ -23,9 +23,9 @@ class SyntaxExtension extends AbstractExtension
 {
     public function getFilters()
     {
-        return array(
-            new TwigFilter('format_sql', array($this, 'formatSQL'), array('is_safe' => array('html'))),
-        );
+        return [
+            new TwigFilter('format_sql', [$this, 'formatSQL'], ['is_safe' => ['html']]),
+        ];
     }
 
     public function getName()
@@ -36,7 +36,7 @@ class SyntaxExtension extends AbstractExtension
     public function formatSQL($sql)
     {
         // list of keywords to prepend a newline in output
-        $newlines = array(
+        $newlines = [
             'FROM',
             '(((FULL|LEFT|RIGHT)? ?(OUTER|INNER)?|CROSS|NATURAL)? JOIN)',
             'VALUES',
@@ -45,10 +45,10 @@ class SyntaxExtension extends AbstractExtension
             'GROUP BY',
             'HAVING',
             'LIMIT',
-        );
+        ];
 
         // list of keywords to highlight
-        $keywords = array_merge($newlines, array(
+        $keywords = array_merge($newlines, [
             // base
             'SELECT', 'UPDATE', 'DELETE', 'INSERT', 'REPLACE',
             'SET',
@@ -76,21 +76,21 @@ class SyntaxExtension extends AbstractExtension
             'ASC',
             'DESC',
             'OFFSET',
-        ));
+        ]);
 
-        $sql = preg_replace(array(
+        $sql = preg_replace([
             '/\b('.implode('|', $newlines).')\b/',
             '/\b('.implode('|', $keywords).')\b/',
             '/(\/\*.*\*\/)/',
             '/(`[^`.]*`)/',
             '/(([0-9a-zA-Z$_]+)\.([0-9a-zA-Z$_]+))/',
-        ), array(
+        ], [
             '<br />\\1',
             '<span class="SQLKeyword">\\1</span>',
             '<span class="SQLComment">\\1</span>',
             '<span class="SQLName">\\1</span>',
             '<span class="SQLName">\\1</span>',
-        ), $sql);
+        ], $sql);
 
         return $sql;
     }

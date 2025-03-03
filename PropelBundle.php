@@ -42,17 +42,17 @@ class PropelBundle extends Bundle
                     ->container
                     ->get('propel.configuration')
                     ;
-                $config->setParameter('debugpdo.logging.methods', array(
+                $config->setParameter('debugpdo.logging.methods', [
                     'PropelPDO::exec',
                     'PropelPDO::query',
                     'PropelPDO::prepare',
                     'DebugPDOStatement::execute',
-                ), false);
-                $config->setParameter('debugpdo.logging.details', array(
-                    'time' => array('enabled' => true),
-                    'mem' => array('enabled' => true),
-                    'connection' => array('enabled' => true),
-                ));
+                ], false);
+                $config->setParameter('debugpdo.logging.details', [
+                    'time' => ['enabled' => true],
+                    'mem' => ['enabled' => true],
+                    'connection' => ['enabled' => true],
+                ]);
 
                 \Propel::setLogger($this->container->get('propel.logger'));
             }

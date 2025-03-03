@@ -21,18 +21,11 @@ use Symfony\Component\Yaml\Yaml;
 class YamlDataLoader extends AbstractDataLoader
 {
     /**
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface
-     */
-    private $container;
-
-    /**
      * {@inheritdoc}
      */
-    public function __construct($rootDir, ContainerInterface $container = null)
+    public function __construct($rootDir, private ?\Symfony\Component\DependencyInjection\ContainerInterface $container = null)
     {
         parent::__construct($rootDir);
-
-        $this->container = $container;
     }
 
     /**
@@ -40,7 +33,7 @@ class YamlDataLoader extends AbstractDataLoader
      */
     protected function transformDataToArray($file)
     {
-        if (strpos($file, "\n") === false && is_file($file)) {
+        if (!str_contains($file, "\n") && is_file($file)) {
             if (false === is_readable($file)) {
                 throw new ParseException(sprintf('Unable to parse "%s" as the file is not readable.', $file));
             }
@@ -51,7 +44,7 @@ class YamlDataLoader extends AbstractDataLoader
                     $args = func_get_args();
                     array_shift($args);
 
-                    $value = call_user_func_array(array($generator, $type), $args);
+                    $value = call_user_func_array([$generator, $type], $args);
                     if ($value instanceof \DateTime) {
                         $value = $value->format('Y-m-d H:i:s');
                     }

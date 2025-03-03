@@ -33,13 +33,13 @@ abstract class AbstractCommand extends Command
      * Additional Phing args to add in specialized commands.
      * @var array
      */
-    protected $additionalPhingArgs = array();
+    protected $additionalPhingArgs = [];
 
     /**
      * Temporary XML schemas used on command execution.
      * @var array
      */
-    protected $tempSchemas = array();
+    protected $tempSchemas = [];
 
     /**
      * @var string
@@ -74,12 +74,8 @@ abstract class AbstractCommand extends Command
      */
     protected $output;
 
-    private ContainerInterface $container;
-
-    public function __construct(ContainerInterface $container, $name = null)
+    public function __construct(private ContainerInterface $container, $name = null)
     {
-        $this->container = $container;
-
         parent::__construct($name);
     }
 
@@ -153,7 +149,7 @@ abstract class AbstractCommand extends Command
 
         if ($input->hasArgument('bundle') && $input->getArgument('bundle')) {
             $bundleName = $input->getArgument('bundle');
-            if (0 === strpos($bundleName, '@')) {
+            if (str_starts_with($bundleName, '@')) {
                 $bundleName = substr($bundleName, 1);
             }
 
@@ -167,7 +163,7 @@ abstract class AbstractCommand extends Command
      * @param string $taskName   A Propel task name.
      * @param array  $properties An array of properties to pass to Phing.
      */
-    protected function callPhing($taskName, $properties = array())
+    protected function callPhing($taskName, $properties = [])
     {
         $kernel = $this->getApplication()->getKernel();
 
@@ -197,7 +193,7 @@ abstract class AbstractCommand extends Command
 
         // Add any arbitrary arguments last
         foreach ($this->additionalPhingArgs as $arg) {
-            if (in_array($arg, array('verbose', 'debug'))) {
+            if (in_array($arg, ['verbose', 'debug'])) {
                 $bufferPhingOutput = false;
             }
 
@@ -229,7 +225,7 @@ abstract class AbstractCommand extends Command
                 strstr($this->buffer, 'failed for the following reason:')) {
                 $returnStatus = false;
             }
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $returnStatus = false;
         }
 
@@ -254,7 +250,7 @@ abstract class AbstractCommand extends Command
         /** @var array<string, array{?BundleInterface, \SplFileInfo}> $finalSchemas */
         $finalSchemas = $this->getFinalSchemas($kernel, $this->bundle);
         foreach ($finalSchemas as $schema) {
-            list($bundle, $finalSchema) = $schema;
+            [$bundle, $finalSchema] = $schema;
 
             if ($bundle) {
                 $file = $cacheDir.DIRECTORY_SEPARATOR.'bundle-'.$bundle->getName().'-'.$finalSchema->getBaseName();
@@ -383,7 +379,7 @@ abstract class AbstractCommand extends Command
     <datasources default="%default_connection%">
 
 EOT
-        , array('%default_connection%' => $container->getParameter('propel.dbal.default_connection')));
+        , ['%default_connection%' => $container->getParameter('propel.dbal.default_connection')]);
 
         $propelConfiguration = $container->get('propel.configuration');
         foreach ($propelConfiguration['datasources'] as $name => $datasource) {
@@ -403,14 +399,14 @@ EOT
       </datasource>
 
 EOT
-            , array(
+            , [
                 '%name%'     => $name,
                 '%adapter%'  => $datasource['adapter'],
                 '%classname%'=> $datasource['connection']['classname'],
                 '%dsn%'      => $datasource['connection']['dsn'],
                 '%username%' => $datasource['connection']['user'],
-                '%password%' => isset($datasource['connection']['password']) ? $datasource['connection']['password'] : '',
-            ));
+                '%password%' => $datasource['connection']['password'] ?? '',
+            ]);
         }
 
         $xml .= <<<EOT
@@ -430,7 +426,7 @@ EOT;
      */
     protected function getProperties($file)
     {
-        $properties = array();
+        $properties = [];
 
         if (false === $lines = @file($file)) {
             throw new \Exception(sprintf('Unable to parse contents of "%s".', $file));
@@ -439,7 +435,7 @@ EOT;
         foreach ($lines as $line) {
             $line = trim($line);
 
-            if ('' == $line || in_array($line[0], array('#', ';'))) {
+            if ('' == $line || in_array($line[0], ['#', ';'])) {
                 continue;
             }
 
@@ -538,7 +534,7 @@ EOT;
             $defaultConfig['connection']['password'] = null;
         }
 
-        return array($name, $defaultConfig);
+        return [$name, $defaultConfig];
     }
 
     /**
@@ -551,12 +547,8 @@ EOT;
     {
         preg_match('#dbname=([a-zA-Z0-9\_]+)#', $dsn, $matches);
 
-        if (isset($matches[1])) {
-            return $matches[1];
-        }
-
         // e.g. SQLite
-        return null;
+        return $matches[1] ?? null;
     }
 
     /**
@@ -580,7 +572,7 @@ EOT;
     protected function writeSummary(OutputInterface $output, $taskname)
     {
         foreach (explode("\n", $this->buffer) as $line) {
-            if (false !== strpos($line, '[' . $taskname . ']')) {
+            if (str_contains($line, '[' . $taskname . ']')) {
                 $arr  = preg_split('#\[' . $taskname . '\] #', $line);
                 $info = $arr[1];
 
@@ -603,11 +595,11 @@ EOT;
      */
     protected function writeSection(OutputInterface $output, $text, $style = 'bg=blue;fg=white')
     {
-        $output->writeln(array(
+        $output->writeln([
             '',
             $this->getHelperSet()->get('formatter')->formatBlock($text, $style, true),
             '',
-        ));
+        ]);
     }
 
     /**
@@ -621,11 +613,11 @@ EOT;
     {
         $moreText = $more ? ' To get more details, run the command with the "--verbose" option.' : '';
 
-        return $this->writeSection($output, array(
+        return $this->writeSection($output, [
             '[Propel] Error',
             '',
             'An error has occured during the "' . $taskName . '" task process.' . $moreText
-        ), 'fg=white;bg=red');
+        ], 'fg=white;bg=red');
     }
 
     /**
@@ -680,10 +672,10 @@ EOT;
      */
     private function getPhingArguments(KernelInterface $kernel, $workingDirectory, $properties)
     {
-        $args = array();
+        $args = [];
 
         // Default properties
-        $properties = array_merge(array(
+        $properties = array_merge([
             'propel.database'           => 'mysql',
             'project.dir'               => $workingDirectory,
             'propel.output.dir'         => $kernel->getProjectDir().'/app/propel',
@@ -696,7 +688,7 @@ EOT;
             'propel.addClassLevelComment'       => false,
             'propel.defaultTimeStampFormat'     => '',
             'propel.builder.pluralizer.class'   => 'builder.util.StandardEnglishPluralizer',
-        ), $properties);
+        ], $properties);
 
         // Adding user defined properties from the configuration
         $properties = array_merge(

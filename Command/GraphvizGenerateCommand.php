@@ -43,13 +43,13 @@ EOT
      *
      * @throws \InvalidArgumentException When the target directory does not exist
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $dest = $this->getApplication()->getKernel()->getProjectDir() . '/app/propel/graph/';
 
-        $this->callPhing('graphviz', array(
+        $this->callPhing('graphviz', [
             'propel.graph.dir'    => $dest,
-        ));
+        ]);
 
         $this->writeNewDirectory($output, $dest);
         return 0;

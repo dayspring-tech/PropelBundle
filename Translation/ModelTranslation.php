@@ -16,11 +16,6 @@ use Symfony\Component\Translation\Translator;
 class ModelTranslation implements DumperInterface, LoaderInterface, ResourceInterface, \Serializable
 {
     /**
-     * @var string
-     */
-    protected $className;
-
-    /**
      * @var \ModelCriteria
      */
     protected $query;
@@ -28,8 +23,8 @@ class ModelTranslation implements DumperInterface, LoaderInterface, ResourceInte
     /**
      * @var array
      */
-    protected $options = array(
-        'columns' => array(
+    protected $options = [
+        'columns' => [
             // The key and its translation ..
             'key' => 'key',
             'translation' => 'translation',
@@ -39,8 +34,8 @@ class ModelTranslation implements DumperInterface, LoaderInterface, ResourceInte
             'domain' => 'domain',
             // The datetime of the last update.
             'updated_at' => 'updated_at',
-        ),
-    );
+        ],
+    ];
 
     /**
      * @var \PDOStatement
@@ -59,9 +54,8 @@ class ModelTranslation implements DumperInterface, LoaderInterface, ResourceInte
      *
      * @throws \PropelException If the class is invalid and no query class could be found.
      */
-    public function __construct($className, array $options = array(), \ModelCriteria $query = null)
+    public function __construct(protected $className, array $options = [], \ModelCriteria $query = null)
     {
-        $this->className = $className;
         $this->options = array_replace_recursive($this->options, $options);
 
         if (!$query) {
@@ -93,7 +87,7 @@ class ModelTranslation implements DumperInterface, LoaderInterface, ResourceInte
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $locale, $domain = 'messages')
+    public function load($resource, $locale, $domain = 'messages'): MessageCatalogue
     {
         // The loader only accepts itself as a resource.
         if ($resource !== $this) {
@@ -124,7 +118,7 @@ class ModelTranslation implements DumperInterface, LoaderInterface, ResourceInte
     /**
      * {@inheritdoc}
      */
-    public function dump(MessageCatalogue $messages, $options = array())
+    public function dump(MessageCatalogue $messages, $options = [])
     {
         $connection = \Propel::getConnection($this->query->getDbName());
         $connection->beginTransaction();
@@ -170,7 +164,7 @@ class ModelTranslation implements DumperInterface, LoaderInterface, ResourceInte
     /**
      * {@inheritdoc}
      */
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf('PropelModelTranslation::%s', $this->className);
     }
@@ -194,13 +188,13 @@ class ModelTranslation implements DumperInterface, LoaderInterface, ResourceInte
             return $this->resourcesStatement;
         }
 
-        $sql = vsprintf('SELECT DISTINCT `%s` AS `locale`, `%s` AS `domain` FROM `%s`', array(
+        $sql = vsprintf('SELECT DISTINCT `%s` AS `locale`, `%s` AS `domain` FROM `%s`', [
             // SELECT ..
             $this->query->getTableMap()->getColumn($this->getColumnname('locale'))->getName(),
             $this->query->getTableMap()->getColumn($this->getColumnname('domain'))->getName(),
             // FROM ..
             $this->query->getTableMap()->getName(),
-        ));
+        ]);
 
         $connection = \Propel::getConnection($this->query->getDbName(), \Propel::CONNECTION_READ);
 
@@ -243,10 +237,10 @@ class ModelTranslation implements DumperInterface, LoaderInterface, ResourceInte
      */
     public function serialize()
     {
-        return serialize(array(
+        return serialize([
             $this->className,
             $this->options,
-        ));
+        ]);
     }
 
     /**
@@ -254,10 +248,7 @@ class ModelTranslation implements DumperInterface, LoaderInterface, ResourceInte
      */
     public function unserialize($serialized)
     {
-        list(
-            $this->className,
-            $this->options
-        ) = unserialize($serialized);
+        [$this->className, $this->options] = unserialize($serialized);
 
         $this->query = \PropelQuery::from($this->className);
     }

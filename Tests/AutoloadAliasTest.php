@@ -11,6 +11,6 @@ class AutoloadAliasTest extends PHPUnit_Framework_TestCase
         $inflector = new \Propel\PropelBundle\Util\PropelInflector();
 
         static::assertInstanceOf('Propel\PropelBundle\Util\PropelInflector', $inflector);
-        static::assertInstanceOf('Propel\Bundle\PropelBundle\Util\PropelInflector', $inflector);
+        static::assertInstanceOf(\Propel\Bundle\PropelBundle\Util\PropelInflector::class, $inflector);
     }
 }

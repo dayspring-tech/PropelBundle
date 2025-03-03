@@ -94,7 +94,7 @@ class ModelType extends AbstractType
     /**
      * {@inheritDoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         if ($options['multiple']) {
             $builder->addViewTransformer(new CollectionToArrayTransformer(), true);
@@ -104,7 +104,7 @@ class ModelType extends AbstractType
     /**
      * {@inheritDoc}
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $choiceLoader = function (Options $options) {
             // Unless the choices are given explicitly, load them on demand
@@ -126,14 +126,14 @@ class ModelType extends AbstractType
             /** @var \ModelCriteria $query */
             $query = $options['query'];
             if ($options['index_property']) {
-                $identifier = array($query->getTableMap()->getColumn($options['index_property']));
+                $identifier = [$query->getTableMap()->getColumn($options['index_property'])];
             } else {
                 $identifier = $query->getTableMap()->getPrimaryKeys();
             }
             /** @var \ColumnMap $firstIdentifier */
             $firstIdentifier = current($identifier);
             if (count($identifier) === 1 && $firstIdentifier->getPdoType() === \PDO::PARAM_INT) {
-                return array(__CLASS__, 'createChoiceName');
+                return [self::class, 'createChoiceName'];
             }
             return null;
         };
@@ -143,7 +143,7 @@ class ModelType extends AbstractType
             /** @var \ModelCriteria $query */
             $query = $options['query'];
             if ($options['index_property']) {
-                $identifier = array($query->getTableMap()->getColumn($options['index_property']));
+                $identifier = [$query->getTableMap()->getColumn($options['index_property'])];
             } else {
                 $identifier = $query->getTableMap()->getPrimaryKeys();
             }
@@ -182,7 +182,7 @@ class ModelType extends AbstractType
         $choiceLabelNormalizer = function (Options $options, $choiceLabel) {
             if ($choiceLabel === null) {
                 if ($options['property'] == null) {
-                    $choiceLabel = array(__CLASS__, 'createChoiceLabel');
+                    $choiceLabel = [self::class, 'createChoiceLabel'];
                 } else {
                     $valueProperty = $options['property'];
                     /** @var \ModelCriteria $query */
@@ -215,7 +215,7 @@ class ModelType extends AbstractType
             'by_reference' => false,
         ]);
 
-        $resolver->setRequired(array('class'));
+        $resolver->setRequired(['class']);
         $resolver->setNormalizer('query', $queryNormalizer);
         $resolver->setNormalizer('choice_label', $choiceLabelNormalizer);
         $resolver->setAllowedTypes('query', ['null', '\ModelCriteria']);
@@ -224,7 +224,7 @@ class ModelType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'model';
     }
@@ -232,7 +232,7 @@ class ModelType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getParent()
+    public function getParent(): ?string
     {
         return ChoiceType::class;
     }

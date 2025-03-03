@@ -28,7 +28,7 @@ class TranslationCollectionTypeTest extends TypeTestCase
 
     protected function getExtensions()
     {
-        return array(new PropelExtension());
+        return [new PropelExtension()];
     }
 
     public function testTranslationsAdded()
@@ -37,24 +37,24 @@ class TranslationCollectionTypeTest extends TypeTestCase
         $item->addTranslatableItemI18n(new TranslatableItemI18n(1, 'fr', 'val1'));
         $item->addTranslatableItemI18n(new TranslatableItemI18n(2, 'en', 'val2'));
 
-        $builder = $this->factory->createBuilder(FormType::class, null, array(
+        $builder = $this->factory->createBuilder(FormType::class, null, [
             'data_class' => self::TRANSLATION_CLASS,
-        ));
+        ]);
 
-        $builder->add('translatableItemI18ns', TranslationCollectionType::class, array(
-            'languages' => array('en', 'fr'),
-            'entry_options' => array(
+        $builder->add('translatableItemI18ns', TranslationCollectionType::class, [
+            'languages' => ['en', 'fr'],
+            'entry_options' => [
                 'data_class' => self::TRANSLATABLE_I18N_CLASS,
-                'columns' => array('value', 'value2' => array('label' => 'Label', 'type' => TextareaType::class)),
-            ),
-        ));
+                'columns' => ['value', 'value2' => ['label' => 'Label', 'type' => TextareaType::class]],
+            ],
+        ]);
         $form = $builder->getForm();
         $form->setData($item);
         $translations = $form->get('translatableItemI18ns');
 
         $this->assertCount(2, $translations);
-        $this->assertInstanceOf('Symfony\Component\Form\Form', $translations['en']);
-        $this->assertInstanceOf('Symfony\Component\Form\Form', $translations['fr']);
+        $this->assertInstanceOf(\Symfony\Component\Form\Form::class, $translations['en']);
+        $this->assertInstanceOf(\Symfony\Component\Form\Form::class, $translations['fr']);
 
         $this->assertInstanceOf(self::TRANSLATABLE_I18N_CLASS, $translations['en']->getData());
         $this->assertInstanceOf(self::TRANSLATABLE_I18N_CLASS, $translations['fr']->getData());
@@ -74,16 +74,16 @@ class TranslationCollectionTypeTest extends TypeTestCase
 
         $this->assertCount(0, $item->getTranslatableItemI18ns());
 
-        $builder = $this->factory->createBuilder(FormType::class, null, array(
+        $builder = $this->factory->createBuilder(FormType::class, null, [
             'data_class' => self::TRANSLATION_CLASS,
-        ));
-        $builder->add('translatableItemI18ns', TranslationCollectionType::class, array(
-            'languages' => array('en', 'fr'),
-            'entry_options' => array(
+        ]);
+        $builder->add('translatableItemI18ns', TranslationCollectionType::class, [
+            'languages' => ['en', 'fr'],
+            'entry_options' => [
                 'data_class' => self::TRANSLATABLE_I18N_CLASS,
-                'columns' => array('value', 'value2' => array('label' => 'Label', 'type' => TextareaType::class)),
-            ),
-        ));
+                'columns' => ['value', 'value2' => ['label' => 'Label', 'type' => TextareaType::class]],
+            ],
+        ]);
 
         $form = $builder->getForm();
         $form->setData($item);
@@ -96,16 +96,16 @@ class TranslationCollectionTypeTest extends TypeTestCase
         $this->expectException(\Symfony\Component\Form\Exception\UnexpectedTypeException::class);
         $item = new Item(null, 'val');
 
-        $builder = $this->factory->createBuilder(FormType::class, null, array(
+        $builder = $this->factory->createBuilder(FormType::class, null, [
             'data_class' => self::NON_TRANSLATION_CLASS,
-        ));
-        $builder->add('value', TranslationCollectionType::class, array(
-            'languages' => array('en', 'fr'),
-            'entry_options' => array(
+        ]);
+        $builder->add('value', TranslationCollectionType::class, [
+            'languages' => ['en', 'fr'],
+            'entry_options' => [
                 'data_class' => self::TRANSLATABLE_I18N_CLASS,
-                'columns' => array('value', 'value2' => array('label' => 'Label', 'type' => 'textarea')),
-            ),
-        ));
+                'columns' => ['value', 'value2' => ['label' => 'Label', 'type' => 'textarea']],
+            ],
+        ]);
 
         $form = $builder->getForm();
         $form->setData($item);
@@ -114,33 +114,33 @@ class TranslationCollectionTypeTest extends TypeTestCase
     public function testNoDataClassAdded()
     {
         $this->expectException(\Symfony\Component\OptionsResolver\Exception\MissingOptionsException::class);
-        $this->factory->createNamed('itemI18ns', TranslationCollectionType::class, null, array(
-            'languages' => array('en', 'fr'),
-            'entry_options' => array(
-                'columns' => array('value', 'value2'),
-            ),
-        ));
+        $this->factory->createNamed('itemI18ns', TranslationCollectionType::class, null, [
+            'languages' => ['en', 'fr'],
+            'entry_options' => [
+                'columns' => ['value', 'value2'],
+            ],
+        ]);
     }
 
     public function testNoLanguagesAdded()
     {
         $this->expectException(\Symfony\Component\OptionsResolver\Exception\MissingOptionsException::class);
-        $this->factory->createNamed('itemI18ns', TranslationCollectionType::class, null, array(
-           'entry_options' => array(
+        $this->factory->createNamed('itemI18ns', TranslationCollectionType::class, null, [
+           'entry_options' => [
                'data_class' => self::TRANSLATABLE_I18N_CLASS,
-               'columns' => array('value', 'value2'),
-           ),
-        ));
+               'columns' => ['value', 'value2'],
+           ],
+        ]);
     }
 
     public function testNoColumnsAdded()
     {
         $this->expectException(\Symfony\Component\OptionsResolver\Exception\MissingOptionsException::class);
-        $this->factory->createNamed('itemI18ns', TranslationCollectionType::class, null, array(
-            'languages' => array('en', 'fr'),
-            'entry_options' => array(
+        $this->factory->createNamed('itemI18ns', TranslationCollectionType::class, null, [
+            'languages' => ['en', 'fr'],
+            'entry_options' => [
                 'data_class' => self::TRANSLATABLE_I18N_CLASS,
-            ),
-        ));
+            ],
+        ]);
     }
 }

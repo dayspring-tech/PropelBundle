@@ -12,7 +12,6 @@
 namespace Propel\Bundle\PropelBundle\Security\User;
 
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
@@ -24,13 +23,6 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class PropelUserProvider implements UserProviderInterface
 {
     /**
-     * A Model class name.
-     *
-     * @var string
-     */
-    protected $class;
-
-    /**
      * A Query class name.
      *
      * @var string
@@ -38,29 +30,26 @@ class PropelUserProvider implements UserProviderInterface
     protected $queryClass;
 
     /**
-     * A property to use to retrieve the user.
-     *
-     * @var string
-     */
-    protected $property;
-
-    /**
      * Default constructor.
      *
      * @param string      $class    The User model class.
      * @param string|null $property The property to use to retrieve a user.
      */
-    public function __construct($class, $property = null)
+    public function __construct(/**
+     * A Model class name.
+     */
+    protected $class, /**
+     * A property to use to retrieve the user.
+     */
+    protected $property = null)
     {
-        $this->class = $class;
-        $this->queryClass = $class.'Query';
-        $this->property = $property;
+        $this->queryClass = $this->class.'Query';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function loadUserByUsername($username)
+    public function loadUserByIdentifier($username): UserInterface
     {
         $queryClass = $this->queryClass;
         $query = $queryClass::create();
@@ -73,19 +62,29 @@ class PropelUserProvider implements UserProviderInterface
         }
 
         if (null === $user = $query->findOne()) {
-            throw new UsernameNotFoundException(sprintf('User "%s" not found.', $username));
+            if (class_exists('Symfony\Component\Security\Core\Exception\UsernameNotFoundException')) {
+                throw new \Symfony\Component\Security\Core\Exception\UsernameNotFoundException(sprintf('User "%s" not found.', $username));
+            } else {
+                throw new \Symfony\Component\Security\Core\Exception\UserNotFoundException(sprintf('User "%s" not found.', $username));
+            }
         }
 
         return $user;
     }
 
+    public function loadUserByUsername($username)
+    {
+        return $this->loadUserByIdentifier($username);
+    }
+
+
     /**
      * {@inheritdoc}
      */
-    public function refreshUser(UserInterface $user)
+    public function refreshUser(UserInterface $user): \Symfony\Component\Security\Core\User\UserInterface
     {
         if (!$user instanceof $this->class) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
         }
 
         $queryClass = $this->queryClass;
@@ -96,7 +95,7 @@ class PropelUserProvider implements UserProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function supportsClass($class)
+    public function supportsClass($class): bool
     {
         return $class === $this->class;
     }

@@ -34,7 +34,7 @@ class PropelChoiceLoaderTest extends PHPUnit_Framework_TestCase
 
     protected function setUp(): void
     {
-        $this->factory = $this->getMockBuilder('Symfony\Component\Form\ChoiceList\Factory\ChoiceListFactoryInterface')->getMock();
+        $this->factory = $this->getMockBuilder(\Symfony\Component\Form\ChoiceList\Factory\ChoiceListFactoryInterface::class)->getMock();
         $this->class = Book::class;
 
         $this->obj1 = new Book();
@@ -66,7 +66,7 @@ class PropelChoiceLoaderTest extends PHPUnit_Framework_TestCase
         );
 
         $choices = new \PropelObjectCollection();
-        $choices->setData(array($this->obj1, $this->obj2, $this->obj3));
+        $choices->setData([$this->obj1, $this->obj2, $this->obj3]);
         $value = function () {};
         $choiceList = new ArrayChoiceList($choices, $value);
 
@@ -89,7 +89,7 @@ class PropelChoiceLoaderTest extends PHPUnit_Framework_TestCase
         );
 
         $choices = new \PropelObjectCollection();
-        $choices->setData(array($this->obj1, $this->obj2, $this->obj3));
+        $choices->setData([$this->obj1, $this->obj2, $this->obj3]);
         $value = function () {};
         $choiceList = new ArrayChoiceList($choices, $value);
 
@@ -112,9 +112,9 @@ class PropelChoiceLoaderTest extends PHPUnit_Framework_TestCase
         $this->query->expects($this->never())
             ->method('find');
 
-        $this->assertSame(array('2', '3'), $loader->loadValuesForChoices(array($this->obj2, $this->obj3)));
+        $this->assertSame(['2', '3'], $loader->loadValuesForChoices([$this->obj2, $this->obj3]));
         // no further loads on subsequent calls
-        $this->assertSame(array('2', '3'), $loader->loadValuesForChoices(array($this->obj2, $this->obj3)));
+        $this->assertSame(['2', '3'], $loader->loadValuesForChoices([$this->obj2, $this->obj3]));
     }
 
     public function testLoadValuesForChoicesDoesNotLoadIfEmptyChoices()
@@ -125,7 +125,7 @@ class PropelChoiceLoaderTest extends PHPUnit_Framework_TestCase
         );
         $this->query->expects($this->never())
             ->method('find');
-        $this->assertSame(array(), $loader->loadValuesForChoices(array()));
+        $this->assertSame([], $loader->loadValuesForChoices([]));
     }
 
     public function testLoadValuesForChoicesDoesNotLoadIfSingleIntId()
@@ -136,7 +136,7 @@ class PropelChoiceLoaderTest extends PHPUnit_Framework_TestCase
         );
         $this->query->expects($this->never())
             ->method('find');
-        $this->assertSame(array('2'), $loader->loadValuesForChoices(array($this->obj2)));
+        $this->assertSame(['2'], $loader->loadValuesForChoices([$this->obj2]));
     }
 
     public function testLoadValuesForChoicesLoadsIfSingleIntIdAndValueGiven()
@@ -146,13 +146,13 @@ class PropelChoiceLoaderTest extends PHPUnit_Framework_TestCase
             $this->query
         );
         $choices = new \PropelObjectCollection();
-        $choices->setData(array($this->obj1, $this->obj2, $this->obj3));
-        $value = function (Book $object) { return $object->getName(); };
+        $choices->setData([$this->obj1, $this->obj2, $this->obj3]);
+        $value = (fn(Book $object) => $object->getName());
         $this->query->expects($this->once())
             ->method('find')
             ->willReturn($choices);
-        $this->assertSame(array('book 2'), $loader->loadValuesForChoices(
-            array($this->obj2),
+        $this->assertSame(['book 2'], $loader->loadValuesForChoices(
+            [$this->obj2],
             $value
         ));
     }
@@ -164,14 +164,14 @@ class PropelChoiceLoaderTest extends PHPUnit_Framework_TestCase
             $this->query
         );
         $choices = new \PropelObjectCollection();
-        $choices->setData(array($this->obj2, $this->obj3));
+        $choices->setData([$this->obj2, $this->obj3]);
         $this->query->expects($this->once())
             ->method('filterBy')
             ->willReturnSelf();
         $this->query->expects($this->once())
             ->method('find')
             ->willReturn($choices);
-        $this->assertSame(array($this->obj2, $this->obj3), $loader->loadChoicesForValues(array('2', '3')));
+        $this->assertSame([$this->obj2, $this->obj3], $loader->loadChoicesForValues(['2', '3']));
     }
 
     public function testLoadChoicesForValuesDoesNotLoadIfEmptyValues()
@@ -182,7 +182,7 @@ class PropelChoiceLoaderTest extends PHPUnit_Framework_TestCase
         );
         $this->query->expects($this->never())
             ->method('find');
-        $this->assertSame(array(), $loader->loadChoicesForValues(array()));
+        $this->assertSame([], $loader->loadChoicesForValues([]));
     }
 
     public function testLoadChoicesForValuesLoadsOnlyChoicesIfSingleIntId()
@@ -193,7 +193,7 @@ class PropelChoiceLoaderTest extends PHPUnit_Framework_TestCase
         );
 
         $choices = new \PropelObjectCollection();
-        $choices->setData(array($this->obj2, $this->obj3));
+        $choices->setData([$this->obj2, $this->obj3]);
 
         $this->query->expects($this->once())
             ->method('filterBy')
@@ -204,8 +204,8 @@ class PropelChoiceLoaderTest extends PHPUnit_Framework_TestCase
 
 
         $this->assertSame(
-            array(4 => $this->obj3, 7 => $this->obj2),
-            $loader->loadChoicesForValues(array(4 => '3', 7 => '2'))
+            [4 => $this->obj3, 7 => $this->obj2],
+            $loader->loadChoicesForValues([4 => '3', 7 => '2'])
         );
     }
 
@@ -216,13 +216,13 @@ class PropelChoiceLoaderTest extends PHPUnit_Framework_TestCase
             $this->query
         );
         $choices = new \PropelObjectCollection();
-        $choices->setData(array($this->obj1, $this->obj2, $this->obj3));
-        $value = function (Book $object) { return $object->getName(); };
+        $choices->setData([$this->obj1, $this->obj2, $this->obj3]);
+        $value = (fn(Book $object) => $object->getName());
         $this->query->expects($this->once())
             ->method('find')
             ->willReturn($choices);
-        $this->assertSame(array($this->obj2), $loader->loadChoicesForValues(
-            array('book 2'),
+        $this->assertSame([$this->obj2], $loader->loadChoicesForValues(
+            ['book 2'],
             $value
         ));
     }

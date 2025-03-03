@@ -13,20 +13,8 @@ namespace Propel\Bundle\PropelBundle\Tests\Fixtures;
 
 class Item implements \Persistent
 {
-    private $id;
-    private $value;
-    private $groupName;
-    private $price;
-
-    private $slug;
-
-    public function __construct($id = null, $value = null, $groupName = null, $price = null, $slug = null)
+    public function __construct(private $id = null, private $value = null, private $groupName = null, private $price = null, private $slug = null)
     {
-        $this->id = $id;
-        $this->value = $value;
-        $this->groupName = $groupName;
-        $this->price = $price;
-        $this->slug = $slug;
     }
 
     public function getId()

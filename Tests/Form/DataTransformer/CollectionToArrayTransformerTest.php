@@ -48,7 +48,7 @@ class CollectionToArrayTransformerTest extends TestCase
     public function testTransformWithData()
     {
         $coll = new \PropelObjectCollection();
-        $coll->setData(array('foo', 'bar'));
+        $coll->setData(['foo', 'bar']);
 
         $result = $this->transformer->transform($coll);
 
@@ -82,7 +82,7 @@ class CollectionToArrayTransformerTest extends TestCase
 
     public function testReverseTransformWithData()
     {
-        $inputData = array('foo', 'bar');
+        $inputData = ['foo', 'bar'];
 
         $result = $this->transformer->reverseTransform($inputData);
         $data = $result->getData();

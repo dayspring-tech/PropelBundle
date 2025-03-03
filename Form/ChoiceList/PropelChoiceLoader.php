@@ -22,11 +22,6 @@ use Symfony\Component\Form\ChoiceList\Loader\ChoiceLoaderInterface;
 class PropelChoiceLoader implements ChoiceLoaderInterface
 {
     /**
-     * @var string
-     */
-    protected $class;
-
-    /**
      * @var \ModelCriteria
      */
     protected $query;
@@ -38,7 +33,7 @@ class PropelChoiceLoader implements ChoiceLoaderInterface
      *
      * @var array
      */
-    protected $identifier = array();
+    protected $identifier = [];
 
     /**
      * Whether to use the identifier for index generation.
@@ -59,12 +54,11 @@ class PropelChoiceLoader implements ChoiceLoaderInterface
      * @param \ModelCriteria    $queryObject
      * @param string            $useAsIdentifier
      */
-    public function __construct($class, \ModelCriteria $queryObject, $useAsIdentifier = null)
+    public function __construct(protected $class, \ModelCriteria $queryObject, $useAsIdentifier = null)
     {
-        $this->class = $class;
         $this->query = $queryObject;
         if ($useAsIdentifier) {
-            $this->identifier = array($this->query->getTableMap()->getColumn($useAsIdentifier));
+            $this->identifier = [$this->query->getTableMap()->getColumn($useAsIdentifier)];
         } else {
             $this->identifier = $this->query->getTableMap()->getPrimaryKeys();
         }
@@ -76,7 +70,7 @@ class PropelChoiceLoader implements ChoiceLoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function loadChoiceList($value = null)
+    public function loadChoiceList($value = null): ChoiceListInterface
     {
         if ($this->choiceList) {
             return $this->choiceList;
@@ -90,11 +84,11 @@ class PropelChoiceLoader implements ChoiceLoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function loadChoicesForValues(array $values, $value = null)
+    public function loadChoicesForValues(array $values, $value = null): array
     {
         // Performance optimization
         if (empty($values)) {
-            return array();
+            return [];
         }
 
         $optimize = null === $value;
@@ -104,8 +98,8 @@ class PropelChoiceLoader implements ChoiceLoaderInterface
             $phpName = current($this->identifier)->getPhpName();
             $query = clone $this->query;
             $unorderedObjects = $query->filterBy($phpName, $values, \Criteria::IN)->find();
-            $objectsById = array();
-            $objects = array();
+            $objectsById = [];
+            $objects = [];
 
             // Maintain order and indices from the given $values
             foreach ($unorderedObjects as $object) {
@@ -127,17 +121,17 @@ class PropelChoiceLoader implements ChoiceLoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function loadValuesForChoices(array $choices, $value = null)
+    public function loadValuesForChoices(array $choices, $value = null): array
     {
         // Performance optimization
         if (empty($choices)) {
-            return array();
+            return [];
         }
 
         $optimize = null === $value;
 
         if ($optimize && !$this->choiceList && $this->identifierAsIndex) {
-            $values = array();
+            $values = [];
 
             // Maintain order and indices of the given objects
             foreach ($choices as $i => $object) {
@@ -164,11 +158,11 @@ class PropelChoiceLoader implements ChoiceLoaderInterface
     {
         return in_array(
             $column->getPdoType(),
-            array(
+            [
                 \PDO::PARAM_BOOL,
                 \PDO::PARAM_INT,
                 \PDO::PARAM_STR,
-            )
+            ]
         );
     }
 
@@ -186,18 +180,18 @@ class PropelChoiceLoader implements ChoiceLoaderInterface
     private function getIdentifierValues($model)
     {
         if (!$model instanceof $this->class) {
-            return array();
+            return [];
         }
 
         if (1 === count($this->identifier) && current($this->identifier) instanceof \ColumnMap) {
             $phpName = current($this->identifier)->getPhpName();
             if (method_exists($model, 'get' . $phpName)) {
-                return array($model->{'get' . $phpName}());
+                return [$model->{'get' . $phpName}()];
             }
         }
 
         if ($model instanceof \BaseObject) {
-            return array($model->getPrimaryKey());
+            return [$model->getPrimaryKey()];
         }
 
         return $model->getPrimaryKeys();
