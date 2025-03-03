@@ -18,7 +18,7 @@ class Column extends \ColumnMap
         $this->phpName = ucfirst($this->name);
     }
 
-    public function isText()
+    public function isText(): bool
     {
         if (!$this->type) {
             return false;
@@ -34,7 +34,7 @@ class Column extends \ColumnMap
         return $this->isText() ? 255 : 0;
     }
 
-    public function isNotNull()
+    public function isNotNull(): bool
     {
         return 'id' === $this->name;
     }
