@@ -37,7 +37,7 @@
     "symfony/yaml": "^5.4|^6.0",
     "mikey179/vfsstream": "^1.6.7",
     "rector/rector": "^2.0",
-    "twig/twig": "^2.1.0|^3.0"
+    "twig/twig": "^3.11.2"
   },
 
   "replace": {
